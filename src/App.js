@@ -1,26 +1,40 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 import './App.css';
+
+import AdminPage from './components/admin/AdminPage';
+import About from './components/common/About';
+import UserPage from './components/user/UserPage';
+import NotFound from './components/common/NotFound';
+import AppNavbar from './components/common/AppNavbar';
+import PrivateRoute from './components/common/PrivateRoute';
+import Login from './components/admin/Login';
+
+function setAdmin(){
+  localStorage.setItem('admin', { username: 'ductai', password: '123456' });
+} 
+
+setAdmin();
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Provider store={store}>
+        <Router>
+          <div>
+            <AppNavbar/>
+            <Switch>
+              <Route exact path="/" component={UserPage}/>
+              <PrivateRoute path="/admin" component={AdminPage} />
+              <Route path="/login" component={Login}/>
+              <Route path="/about" component={About}/>
+              <Route component={NotFound} />
+            </Switch>
+          </div>
+        </Router>
+      </Provider>
     );
   }
 }

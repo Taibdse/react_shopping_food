@@ -1,33 +1,93 @@
-.App {
+.old-price{
+  opacity: 0.7;
+  text-decoration: line-through;
+  margin-left: 5px;
+  display: inline-block;
+}
+
+.new-price{
+  font-size: 2em;
+  color: yellow;
+}
+
+#cart-area{
+  position: fixed;
+  top: 0;
+  /* right: -350px; */
+  width: 390px!important;
+  height: 100vh;
+  
+  transition: all ease-in-out 0.3s;
+  /* background-color: red; */
+  z-index: 5;
+}
+
+#toggle-cart-area{
+  float: left;;
+  width: 40px;
+  background-color: transparent;
+  height: 100%;
+  position: relative;
+}
+
+#toggle-cart {
+  width: 40px;
+  height: 40px;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  background-color: #fff;
+  position: absolute;
+  top: 100px;
+  left: 0;
   text-align: center;
+  line-height: 40px;
+  color: black;
+  font-size: 1.8em;
+  cursor: pointer;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+#toggle-cart i{
+  transition: all ease-out 0.3s;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#toggle-cart:hover i{
+  transform: rotate(90deg);
+  color: lightseagreen;
 }
 
-.App-link {
-  color: #61dafb;
+#cart{
+  float: right;
+  width: 350px;
+  background-color: rgba(0,0,0,0.9);
+  height: 100%;
+  overflow-y: auto;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.hide-cart{
+  right: -350px;
+}
+
+.show-cart{
+  right: 0;
+}
+
+.card-cart-item{
+  position: relative;
+}
+.card-cart-item .delete-cart-item{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+.card-cart-item .delete-cart-item:hover{
+  box-shadow: 0 0 10px 10px rgba(0,0,0,0.3)
+}
+
+.card-food-item img{
+  transition: all ease-out 0.3s;
+}
+
+.card-food-item:hover img{
+  transform: scale(1.2);
 }

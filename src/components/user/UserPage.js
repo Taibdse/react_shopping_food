@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import FoodsList from './FoodsList';
 import { Container } from 'react-bootstrap';
 import CartFood from './CartFood';
+import LoginUser from './LoginUser';
 
 class UserPage extends React.Component {
     constructor(props) {
@@ -18,6 +19,7 @@ class UserPage extends React.Component {
                     <FoodsList/>
                 </Container>
                 <CartFood/>
+                <LoginUser/>
             </Fragment>
         );
     }

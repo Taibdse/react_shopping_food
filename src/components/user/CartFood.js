@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import { addFoodToCart, minusQuanity, removeCartItem } from '../../redux/actions/cartActions';
+import { updateFood } from '../../redux/actions/foodActions';
+import { setOrder } from '../../redux/actions/orderActions';
+import { removeCart } from '../../redux/actions/cartActions';
+import { toggleFormLoginUser } from '../../redux/actions/userActions';
 import classnames from 'classnames';
 
 class CartFood extends React.Component {
@@ -23,7 +27,11 @@ class CartFood extends React.Component {
 
     addQuantity = food => {
         let cartItem = this.props.cart.find(item => item.food.id === food.id);
+        if(!cartItem || cartItem.quantity === 0) 
+            return alert(`${food.name} in our shop is already out of quantity!, please choose other foods instead`);
         if(cartItem){
+            if(food.quantity === cartItem.quantity) 
+                return alert(`Shop does not have enough ${food.name} quantity for you, sorry for this`);
             this.props.addFoodToCart(food);
         }
     }
@@ -33,7 +41,19 @@ class CartFood extends React.Component {
     }
 
     order = () => {
-        console.log('ordered');
+        if(this.props.cart.length === 0) return alert('You have not chosen foods!!, please pick your ones');
+
+        if(this.props.isAuthenticatedUser){
+            this.props.cart.forEach(item => this.props.updateFood(item.food));
+            this.props.setOrder(this.props.cart);
+            setTimeout(() => { 
+                this.props.removeCart();
+                alert('Your order was successfully ordered')
+             }, 500);
+        } else {
+            this.props.toggleFormLoginUser(true);
+        }
+       
     }
 
     toggleCart = () => {
@@ -94,13 +114,19 @@ class CartFood extends React.Component {
 
 CartFood.propTypes = {
     cart: PropTypes.array.isRequired,
+    isAuthenticatedUser: PropTypes.bool.isRequired,
     addFoodToCart: PropTypes.func.isRequired,
     minusQuanity: PropTypes.func.isRequired,
     removeCartItem: PropTypes.func.isRequired,
+    updateFood: PropTypes.func.isRequired,
+    setOrder: PropTypes.func.isRequired,
+    removeCart: PropTypes.func.isRequired,
+    toggleFormLoginUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    cart: state.cart.cart
+    cart: state.cart.cart,
+    isAuthenticatedUser: state.user.isAuthenticated
 })
 
-export default connect(mapStateToProps, { addFoodToCart, minusQuanity, removeCartItem })(CartFood);
+export default connect(mapStateToProps, { addFoodToCart, minusQuanity, removeCartItem, updateFood, setOrder, removeCart, toggleFormLoginUser })(CartFood);

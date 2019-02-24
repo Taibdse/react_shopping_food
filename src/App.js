@@ -11,12 +11,7 @@ import NotFound from './components/common/NotFound';
 import AppNavbar from './components/common/AppNavbar';
 import PrivateRoute from './components/common/PrivateRoute';
 import Login from './components/admin/Login';
-
-function setAdmin(){
-  localStorage.setItem('admin', { username: 'ductai', password: '123456' });
-} 
-
-setAdmin();
+import CartPage from './components/user/OrdersPage';
 
 class App extends Component {
   render() {
@@ -30,6 +25,8 @@ class App extends Component {
               <PrivateRoute path="/admin" component={AdminPage} />
               <Route path="/login" component={Login}/>
               <Route path="/about" component={About}/>
+              <Route exact path="/user_orders" component={CartPage}/>
+              <Route exact path="/user_orders/:id" component={CartPage}/>
               <Route component={NotFound} />
             </Switch>
           </div>

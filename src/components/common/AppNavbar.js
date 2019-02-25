@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter }  from 'react-router-dom';
 import { Navbar, Nav, Form, Button } from 'react-bootstrap';
 import { setAdmin } from '../../redux/actions/adminActions';
+import { setUser, toggleFormLoginUser } from '../../redux/actions/userActions';
 import classnames from 'classnames';
 
 class AppNavbar extends React.Component {
@@ -13,7 +14,8 @@ class AppNavbar extends React.Component {
         this.state = {
             isAboutPage: false,
             isAdminPage: false,
-            isUserPage: false
+            isUserPage: false,
+            isLoginAdmin: false
         };
 
         this.props.history.listen((location) => this.setNavLinkActive(location))
@@ -21,11 +23,12 @@ class AppNavbar extends React.Component {
 
     setNavLinkActive = (location) => {
         let { pathname } = location;
-            this.setState({ 
-                isAdminPage: pathname === '/admin', 
-                isAboutPage: pathname === '/about', 
-                isUserPage: pathname === '/'
-            });
+        this.setState({ 
+            isAdminPage: pathname.indexOf('/admin') > -1, 
+            isAboutPage: pathname === '/about', 
+            isUserPage: pathname === '/',
+            isLoginAdmin: pathname === '/login'
+        });
     }
 
     componentDidMount = () => this.setNavLinkActive(this.props.location);
@@ -39,8 +42,20 @@ class AppNavbar extends React.Component {
         this.props.history.push('/login');
     }
 
+    logoutUser = () => {
+        this.props.setUser({});
+    }
+
+    signInUser = () => {
+        if(!this.props.user.isAuthenticated){
+            this.props.toggleFormLoginUser(true);
+        }
+    }
+
     render() {
-        let { isAdminPage, isAboutPage, isUserPage } = this.state;
+        let { isAdminPage, isAboutPage, isUserPage, isLoginAdmin } = this.state;
+        let { user } = this.props;
+
         return (
             <Navbar bg="light" expand="lg">
                 <Navbar.Brand href="/">DTFood.vn</Navbar.Brand>
@@ -54,6 +69,18 @@ class AppNavbar extends React.Component {
                    
                     <Form inline>
                         { this.shouldRenderLogOutBtn() && <Button variant="outline-info" onClick={this.logout}>Logout</Button> }
+                        { user.isAuthenticated && !isAdminPage && (
+                            <span>
+                                <span className="font-italic mr-3">{ user.user.username }</span>
+                                <Button variant="outline-warning mr-3" onClick={this.logoutUser}>Logout</Button>
+                                <Link className="btn btn-outline-success" to="/user_orders">
+                                    <i className="fas fa-shopping-cart mr-2"></i> Your orders
+                                </Link>
+                            </span>
+                        ) } 
+                        {( !user.isAuthenticated && !isAdminPage && !isLoginAdmin &&
+                            <Button variant="outline-warning" onClick={this.signInUser}>Sign In</Button>
+                        )}
                     </Form>
                 </Navbar.Collapse>
             </Navbar>
@@ -63,11 +90,15 @@ class AppNavbar extends React.Component {
 
 AppNavbar.propTypes = {
     auth: PropTypes.object.isRequired,
-    setAdmin: PropTypes.func.isRequired
+    user: PropTypes.object.isRequired,
+    setAdmin: PropTypes.func.isRequired,
+    setUser: PropTypes.func.isRequired,
+    toggleFormLoginUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    auth: state.admin
+    auth: state.admin,
+    user: state.user
 })
 
-export default connect(mapStateToProps, { setAdmin })( withRouter(AppNavbar) );
+export default connect(mapStateToProps, { setAdmin, setUser, toggleFormLoginUser })( withRouter(AppNavbar) );

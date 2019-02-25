@@ -4,18 +4,37 @@ import { FormGroup, FormLabel, Form, Card, Row, Col, Button } from 'react-bootst
 import { connect } from 'react-redux';
 import { addNewFood, clearForm, updateFood, toggleForm } from '../../redux/actions/foodActions';
 import { isNotEmpty } from '../../validations/isNotEmpty';
+import { isPositiveInt } from '../../validations/isPositiveInt';
+import InputGroup from '../common/InputGroup';
+import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
 
 class FoodForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             food: {},
+            error: {},
         };
+    }
+
+    validateInput = () => {
+        let { name, price, quantity, discount, image, description } = this.state.food;
+        let error = {};
+        if(!isNotEmpty(name)) error.name = 'Name is required!';
+        if(!isNotEmpty(description) || description.length < 10) error.description = 'Description is required and min length is 10!';
+        if(!isNotEmpty(image)) error.image = 'Image link is required!';
+        if(!isPositiveInt(price)) error.price = 'Price must be positive integer!';
+        if(!isPositiveInt(quantity)) error.quantity = 'Quantity must be positive integer!';
+        if(!isPositiveInt(discount)) error.discount = 'Discount must be positive integer!';
+        return error;
     }
 
     onSubmit = (e) => {
         e.preventDefault();
         let { food }  = this.state;
+        let error = this.validateInput();
+        this.setState({ error });
+        if(isNotEmpty(error)) return alert('Invalid input data!');
         if(food.id){
             this.props.updateFood(food);
         } else {
@@ -28,11 +47,12 @@ class FoodForm extends React.Component {
         if(!isNotEmpty(food)) {
             food = { name: '', price: '', discount: '', quantity: '', image: '', description: '' }
         }
-        this.setState({ food });
+        this.setState({ food, error: {} });
     }
 
     clearForm = (e) => {
         e.preventDefault();
+        // this.setState({ error: {} });
         this.props.clearForm();
     }
 
@@ -54,6 +74,7 @@ class FoodForm extends React.Component {
     componentDidMount = () => console.log('componentDidMount');
 
     render() {
+        let { error } = this.state;
         return (
             <Fragment>
                 <div className="row">
@@ -71,13 +92,30 @@ class FoodForm extends React.Component {
                                 <Col sm={6}>
                                     <FormGroup>
                                         <FormLabel>Food name</FormLabel>
-                                        <input className="form-control" type="text" name="name" onChange={this.onChange} value={this.state.food.name} placeholder="Enter food name..."/>
+                                        <InputGroup 
+                                            name="name"
+                                            placeholder="Enter food name..."
+                                            onChange={this.onChange}
+                                            value={this.state.food.name}
+                                            error={error.name}
+                                            icon={"fas fa-hamburger"}
+                                        />
+                                        {/* <input className="form-control" type="text" name="name" onChange={this.onChange} value={this.state.food.name} placeholder="Enter food name..."/> */}
                                     </FormGroup>
                                 </Col>
                                 <Col sm={6}>
                                     <FormGroup>
                                         <FormLabel>Price</FormLabel>
-                                        <input className="form-control" type="number" name="price" onChange={this.onChange} value={this.state.food.price} placeholder="Enter price..."/>
+                                        <InputGroup 
+                                            type="number"
+                                            name="price"
+                                            placeholder="Enter price..."
+                                            onChange={this.onChange}
+                                            value={this.state.food.price}
+                                            error={error.price}
+                                            icon={"fas fa-dollar-sign"}
+                                        />
+                                        {/* <input className="form-control" type="number" name="price" onChange={this.onChange} value={this.state.food.price} placeholder="Enter price..."/> */}
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -85,13 +123,31 @@ class FoodForm extends React.Component {
                                 <Col sm={6}>
                                     <FormGroup>
                                         <FormLabel>Discount</FormLabel>
-                                        <input className="form-control" type="number" name="discount" onChange={this.onChange} value={this.state.food.discount} placeholder="Enter discount..."/>
+                                        <InputGroup 
+                                            type="number"
+                                            name="discount"
+                                            placeholder="Enter discount..."
+                                            onChange={this.onChange}
+                                            value={this.state.food.discount}
+                                            error={error.discount}
+                                            icon={"fas fa-percent"}
+                                        />
+                                        {/* <input className="form-control" type="number" name="discount" onChange={this.onChange} value={this.state.food.discount} placeholder="Enter discount..."/> */}
                                     </FormGroup>
                                 </Col>
                                 <Col sm={6}>
                                     <FormGroup>
                                         <FormLabel>Quantity</FormLabel>
-                                        <input className="form-control" type="number" name="quantity" onChange={this.onChange} value={this.state.food.quantity} placeholder="Enter price..."/>
+                                        <InputGroup 
+                                            type="number"
+                                            name="quantity"
+                                            placeholder="Enter quantity..."
+                                            onChange={this.onChange}
+                                            value={this.state.food.quantity}
+                                            error={error.quantity}
+                                            icon={"fas fa-stream"}
+                                        />
+                                        {/* <input className="form-control" type="number" name="quantity" onChange={this.onChange} value={this.state.food.quantity} placeholder="Enter price..."/> */}
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -99,7 +155,15 @@ class FoodForm extends React.Component {
                                 <Col>
                                     <FormGroup>
                                         <FormLabel>Image</FormLabel>
-                                        <input className="form-control" type="text" name="image" onChange={this.onChange} value={this.state.food.image} placeholder="Enter Url..."/>
+                                        <InputGroup 
+                                            name="image"
+                                            placeholder="Enter image link..."
+                                            onChange={this.onChange}
+                                            value={this.state.food.image}
+                                            error={error.image}
+                                            icon={"fas fa-link"}
+                                        />
+                                        {/* <input className="form-control" type="text" name="image" onChange={this.onChange} value={this.state.food.image} placeholder="Enter Url..."/> */}
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -107,7 +171,15 @@ class FoodForm extends React.Component {
                                 <Col>
                                     <FormGroup>
                                         <FormLabel>Description</FormLabel>
-                                        <textarea className="form-control" name="description" onChange={this.onChange} value={this.state.food.description ? this.state.food.description: ''} rows="4" placeholder="Enter description..." />
+                                        <TextAreaFieldGroup
+                                            name="description"
+                                            onChange={this.onChange}
+                                            value={this.state.food.description ? this.state.food.description: ''}
+                                            placeholder="Enter description..."
+                                            error={error.description}
+                                            info={false}
+                                        />
+                                        {/* <textarea className="form-control" name="description" onChange={this.onChange} value={this.state.food.description ? this.state.food.description: ''} rows="4" placeholder="Enter description..." /> */}
                                     </FormGroup>
                                 </Col>
                             </Row>

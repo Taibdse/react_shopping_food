@@ -1,4 +1,6 @@
 import uuid from 'uuid';
+import { isUser } from '../auth/isUser';
+import { isAdmin } from '../auth/isAdmin';
 
 export const foods = [{
         id: uuid.v4(),
@@ -207,6 +209,8 @@ export const foods = [{
 export const FOOD_LIST_STORAGE_KEY = 'FOOD_LIST_STORAGE_KEY';
 export const CART_STORAGE_KEY = 'CART_STORAGE_KEY';
 export const ORDERED_ITEMS_STORAGE_KEY = 'ORDERED_ITEMS_STORAGE_KEY';
+export const USER_STORAGE_KEY = 'USER_STORAGE_KEY';
+export const ADMIN_STORAGE_KEY = 'ADMIN_STORAGE_KEY';
 
 export function getInitialFoodsList(){
     let json = localStorage.getItem(FOOD_LIST_STORAGE_KEY);
@@ -249,4 +253,30 @@ export function getInitialOrder(){
 
 export function saveDataToLocalStorage(data, key){
     localStorage.setItem(key, JSON.stringify(data));
+}
+
+export function getInitialUser(){
+    let json = localStorage.getItem(USER_STORAGE_KEY);
+    if(!json) return {};
+    try {
+        let user = JSON.parse(json);
+        if(isUser(user.username, user.password)) return user;
+        return {};
+    } catch (error) {
+        console.log('Invalid json format');
+        return {};
+    }
+}
+
+export function getInitialAdmin(){
+    let json = localStorage.getItem(ADMIN_STORAGE_KEY);
+    if(!json) return {};
+    try {
+        let admin = JSON.parse(json);
+        if(isAdmin(admin.username, admin.password)) return admin;
+        return {};
+    } catch (error) {
+        console.log('Invalid json format');
+        return {};
+    }
 }

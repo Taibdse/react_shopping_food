@@ -10,8 +10,10 @@ import UserPage from './components/user/UserPage';
 import NotFound from './components/common/NotFound';
 import AppNavbar from './components/common/AppNavbar';
 import PrivateRoute from './components/common/PrivateRoute';
+import UserPrivateRoute from './components/common/UserPrivateRoute';
 import Login from './components/admin/Login';
-import CartPage from './components/user/OrdersPage';
+import OrdersPage from './components/user/OrdersPage';
+import OrderDetails from './components/user/OrderDetails';
 
 class App extends Component {
   render() {
@@ -25,8 +27,9 @@ class App extends Component {
               <PrivateRoute path="/admin" component={AdminPage} />
               <Route path="/login" component={Login}/>
               <Route path="/about" component={About}/>
-              <Route exact path="/user_orders" component={CartPage}/>
-              <Route exact path="/user_orders/:id" component={CartPage}/>
+              <UserPrivateRoute exact path="/user_orders" component={OrdersPage} />
+              <UserPrivateRoute exact path="/user_orders/:id" component={OrderDetails}/>
+              <Route exact path="/notfound" component={NotFound} />
               <Route component={NotFound} />
             </Switch>
           </div>

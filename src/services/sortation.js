@@ -7,13 +7,17 @@ export const sortByTextValue = (array, prop, sort) => {
         item[prop].toLowerCase()
         return item;
     })
-    .sort((a, b) => a[prop] > b[prop] ? 1 : -1);
-    return (sort === 'asc') ? arr : arr.reverse();
+    .sort((a, b) => {
+        if(sort === 'asc') return a[prop] > b[prop] ? 1 : -1;
+        return a[prop] < b[prop] ? 1 : -1;
+    });
 }
 
 export const sortByNumberValue = (array, prop, sort) => {
     if(!isNotEmpty(array)) return [];
-    if(sort === 'none') return array;
-    array.sort((a, b) => a[prop] - b[prop]);
-    return (sort === 'asc') ? array : array.reverse();
+    let arr = array.slice();
+    if(sort === 'none') return arr;
+    arr.sort((a, b) => {
+        return (sort === 'asc') ? a[prop] - b[prop] : b[prop] - a[prop]
+    });
 }

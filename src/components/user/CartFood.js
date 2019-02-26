@@ -86,7 +86,7 @@ class CartFood extends React.Component {
                             </div>
                             <div className="row">
                                 <div className="col-4">
-                                    <img src={cartItem.food.image} className="img-fluid"/>
+                                    <img src={cartItem.food.image} className="img-fluid" alt=""/>
                                 </div>
                                 <div className="col-8">
                                     <h6>{ cartItem.food.name } <span style={{ color: 'yellow' }}>{ getUnitPrice(cartItem.food.price, cartItem.food.discount) * cartItem.quantity }$</span> </h6>
@@ -106,7 +106,7 @@ class CartFood extends React.Component {
                         </div>
                     )) }
                     <div>
-                        <h5>Total Payment: { getTotalPaymentCart(this.props.cart) }</h5>
+                        <h5>Total Payment: <span style={{ color:'yellow' }}>{ getTotalPaymentCart(this.props.cart) }$</span></h5>
                     </div>
                     <Button onClick={this.order} id="btnOrder" block className="mb-5">Order</Button>
                 </div>

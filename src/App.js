@@ -14,7 +14,7 @@ import UserPrivateRoute from './components/common/UserPrivateRoute';
 import Login from './components/admin/Login';
 import OrdersPage from './components/user/OrdersPage';
 import OrderDetails from './components/user/OrderDetails';
-
+import UserAccount from './components/user/UserAccount';
 class App extends Component {
   render() {
     return (
@@ -29,6 +29,7 @@ class App extends Component {
               <Route path="/about" component={About}/>
               <UserPrivateRoute exact path="/user_orders" component={OrdersPage} />
               <UserPrivateRoute exact path="/user_orders/:id" component={OrderDetails}/>
+              <UserPrivateRoute exact path="/user/account" component={UserAccount}/>
               <Route exact path="/notfound" component={NotFound} />
               <Route component={NotFound} />
             </Switch>

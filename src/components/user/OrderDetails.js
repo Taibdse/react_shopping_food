@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { getTotalPaymentCart, getUnitPrice } from '../../services/payment';
 
 class OrderDetails extends React.Component {
     constructor(props) {
@@ -43,21 +44,25 @@ class OrderDetails extends React.Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        { order.cart.map((cartItem, index) => (
-                                            <tr key={cartItem.food.id}>
-                                                <td>{ index + 1 }</td>
-                                                <td>
-                                                    <img src={ cartItem.food.image } style={{ width: '150px' }}/>
-                                                </td>
-                                                <td>{ cartItem.food.name }</td>
-                                                <td>{ cartItem.quantity }</td>
-                                                <td>{ cartItem.food.price }$</td>
-                                                <td>{ cartItem.food.price * cartItem.quantity }$</td>
-                                            </tr>
-                                        )) }
+                                        { order.cart.map((cartItem, index) => {
+                                            let { food } = cartItem;
+                                            let unitPrice = getUnitPrice(food.price, food.discount);
+                                            return (
+                                                <tr key={cartItem.food.id}>
+                                                    <td>{ index + 1 }</td>
+                                                    <td>
+                                                        <img src={ food.image } style={{ width: '150px' }}/>
+                                                    </td>
+                                                    <td>{ food.name }</td>
+                                                    <td>{ cartItem.quantity }</td>
+                                                    <td>{ unitPrice }$</td>
+                                                    <td>{ unitPrice * cartItem.quantity }$</td>
+                                                </tr>
+                                            )
+                                        }) }
                                         <tr>
                                             <td colSpan={5}>Total Payment</td>
-                                            <td>{ this.getTotalPayment(order.cart) }$</td>
+                                            <td>{ getTotalPaymentCart(order.cart) }$</td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -71,15 +71,15 @@ class AppNavbar extends React.Component {
                         { this.shouldRenderLogOutBtn() && <Button variant="outline-info" onClick={this.logout}>Logout</Button> }
                         { user.isAuthenticated && !isAdminPage && (
                             <span>
-                                <span className="font-italic mr-3">{ user.user.username }</span>
-                                <Button variant="outline-warning mr-3" onClick={this.logoutUser}>Logout</Button>
-                                <Link className="btn btn-outline-success" to="/user_orders">
+                                <Link className="font-italic mr-3" to="/user/account">{ user.user.username }</Link>
+                                <Button variant="outline-danger mr-3" onClick={this.logoutUser}>Logout</Button>
+                                <Link className="btn btn-outline-info" to="/user_orders">
                                     <i className="fas fa-shopping-cart mr-2"></i> Your orders
                                 </Link>
                             </span>
                         ) } 
                         {( !user.isAuthenticated && !isAdminPage && !isLoginAdminPage &&
-                            <Button variant="outline-warning" onClick={this.signInUser}>Sign In</Button>
+                            <Button variant="outline-warning" onClick={this.signInUser}>Sign In User Account</Button>
                         )}
                     </Form>
                 </Navbar.Collapse>

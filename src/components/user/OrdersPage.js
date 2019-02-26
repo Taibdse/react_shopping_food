@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { getTotalPaymentCart } from '../../services/payment';
 
 // {
 //     order: [
@@ -15,11 +16,6 @@ class OrdersPage extends React.Component {
     getFoodNames = (cart) => cart.map(item => (<div key={item.food.id} style={{ whiteSpace: 'nowrap' }}>{ item.food.name }</div>))
 
     getDateTime = (timestamp) => new Date(timestamp).toLocaleTimeString() + ' ' + new Date().toLocaleDateString();
-
-    getTotalOrderPrice = (cart) => cart.reduce((sum, item) => {
-        let unitPrice = Math.round(item.food.price / 100 * (100 - item.food.discount));
-        return sum += unitPrice * item.quantity;
-    } , 0);
 
     render() {
         return (
@@ -43,7 +39,7 @@ class OrdersPage extends React.Component {
                                         <tr key={order.id}>
                                             <td>{ index + 1 }</td>
                                             <td style={{ whiteSpace: 'nowrap' }}>{ this.getFoodNames(order.cart) }</td>
-                                            <td>{ this.getTotalOrderPrice(order.cart) }$</td>
+                                            <td>{ getTotalPaymentCart(order.cart) }$</td>
                                             <td style={{ whiteSpace: 'nowrap' }}>{ this.getDateTime(order.time) }</td>
                                             <td>
                                                 <Link className="btn btn-primary btn-sm" to={`/user_orders/${order.id}`}>Detail</Link>

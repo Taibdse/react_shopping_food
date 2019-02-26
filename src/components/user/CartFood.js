@@ -7,6 +7,7 @@ import { updateFood } from '../../redux/actions/foodActions';
 import { setOrder } from '../../redux/actions/orderActions';
 import { removeCart } from '../../redux/actions/cartActions';
 import { toggleFormLoginUser } from '../../redux/actions/userActions';
+import { getTotalPaymentCart, getUnitPrice } from '../../services/payment';
 import classnames from 'classnames';
 
 class CartFood extends React.Component {
@@ -53,7 +54,6 @@ class CartFood extends React.Component {
         } else {
             this.props.toggleFormLoginUser(true);
         }
-       
     }
 
     toggleCart = () => {
@@ -89,7 +89,7 @@ class CartFood extends React.Component {
                                     <img src={cartItem.food.image} className="img-fluid"/>
                                 </div>
                                 <div className="col-8">
-                                    <h6>{ cartItem.food.name }</h6>
+                                    <h6>{ cartItem.food.name } <span style={{ color: 'yellow' }}>{ getUnitPrice(cartItem.food.price, cartItem.food.discount) * cartItem.quantity }$</span> </h6>
                                     <p style={{ width: '150px' }}>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Prepend>
@@ -105,6 +105,9 @@ class CartFood extends React.Component {
                             </div>
                         </div>
                     )) }
+                    <div>
+                        <h5>Total Payment: { getTotalPaymentCart(this.props.cart) }</h5>
+                    </div>
                     <Button onClick={this.order} id="btnOrder" block className="mb-5">Order</Button>
                 </div>
             </div>

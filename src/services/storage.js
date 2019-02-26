@@ -144,7 +144,7 @@ export const foods = [{
     },
     {
         id: uuid.v4(),
-        name: `Pho Hanoi`,
+        name: `Royal Tea`,
         image: 'https://images.foody.vn/res/g87/868951/prof/s280x175/foody-upload-api-foody-mobile-royalteadgfdfgdf-jpg-181221094000.jpg',
         description: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Porro, sapiente.',
         price: 10,
@@ -255,6 +255,10 @@ export function saveDataToLocalStorage(data, key){
     localStorage.setItem(key, JSON.stringify(data));
 }
 
+export function saveDataToSessionStorage(data, key){
+    sessionStorage.setItem(key, JSON.stringify(data));
+}
+
 export function getInitialUser(){
     let json = localStorage.getItem(USER_STORAGE_KEY);
     if(!json) return {};
@@ -269,7 +273,7 @@ export function getInitialUser(){
 }
 
 export function getInitialAdmin(){
-    let json = localStorage.getItem(ADMIN_STORAGE_KEY);
+    let json = sessionStorage.getItem(ADMIN_STORAGE_KEY);
     if(!json) return {};
     try {
         let admin = JSON.parse(json);

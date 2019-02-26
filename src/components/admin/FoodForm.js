@@ -177,7 +177,7 @@ class FoodForm extends React.Component {
                                             value={this.state.food.description ? this.state.food.description: ''}
                                             placeholder="Enter description..."
                                             error={error.description}
-                                            info={false}
+                                            info={''}
                                         />
                                         {/* <textarea className="form-control" name="description" onChange={this.onChange} value={this.state.food.description ? this.state.food.description: ''} rows="4" placeholder="Enter description..." /> */}
                                     </FormGroup>

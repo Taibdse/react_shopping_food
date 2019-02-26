@@ -15,7 +15,7 @@ class AppNavbar extends React.Component {
             isAboutPage: false,
             isAdminPage: false,
             isUserPage: false,
-            isLoginAdmin: false
+            isLoginAdminPage: false
         };
 
         this.props.history.listen((location) => this.setNavLinkActive(location))
@@ -27,7 +27,7 @@ class AppNavbar extends React.Component {
             isAdminPage: pathname.indexOf('/admin') > -1, 
             isAboutPage: pathname === '/about', 
             isUserPage: pathname === '/',
-            isLoginAdmin: pathname === '/login'
+            isLoginAdminPage: pathname === '/login'
         });
     }
 
@@ -53,7 +53,7 @@ class AppNavbar extends React.Component {
     }
 
     render() {
-        let { isAdminPage, isAboutPage, isUserPage, isLoginAdmin } = this.state;
+        let { isAdminPage, isAboutPage, isUserPage, isLoginAdminPage } = this.state;
         let { user } = this.props;
 
         return (
@@ -78,7 +78,7 @@ class AppNavbar extends React.Component {
                                 </Link>
                             </span>
                         ) } 
-                        {( !user.isAuthenticated && !isAdminPage && !isLoginAdmin &&
+                        {( !user.isAuthenticated && !isAdminPage && !isLoginAdminPage &&
                             <Button variant="outline-warning" onClick={this.signInUser}>Sign In</Button>
                         )}
                     </Form>

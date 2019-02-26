@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { Container, Row, Col } from 'react-bootstrap';
 import Foods from './Foods';
 import FoodForm from './FoodForm';
-import { Container, Row, Col } from 'react-bootstrap';
 import FilterForm from './FilterForm';
+import SortFood from './SortFood';
 
 class AdminPage extends React.Component {
     constructor(props) {
@@ -22,8 +23,9 @@ class AdminPage extends React.Component {
                         </Col>
                     </Row>
                     <Row className="my-3">
-                        <Col sm={8} className="mx-auto">
+                        <Col sm={12} className="mx-auto">
                             <FilterForm/>
+                            <SortFood/>
                         </Col>
                     </Row>
                     <Row className="mt-5">

@@ -16,7 +16,10 @@ class OrdersPage extends React.Component {
 
     getDateTime = (timestamp) => new Date(timestamp).toLocaleTimeString() + ' ' + new Date().toLocaleDateString();
 
-    getTotalOrderPrice = (cart) => cart.reduce((sum, item) => sum += item.food.price * item.quantity , 0);
+    getTotalOrderPrice = (cart) => cart.reduce((sum, item) => {
+        let unitPrice = Math.round(item.food.price / 100 * (100 - item.food.discount));
+        return sum += unitPrice * item.quantity;
+    } , 0);
 
     render() {
         return (

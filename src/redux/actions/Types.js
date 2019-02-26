@@ -14,3 +14,5 @@ export const SET_USER = 'SET_USER';
 export const SET_ORDERS = 'SET_ORDERS';
 export const REMOVE_CART = 'REMOVE_CART';
 export const TOGGLE_FORM_USER_LOGIN = 'TOGGLE_FORM_USER_LOGIN';
+
+export const SET_SORT_VALUE = 'SET_SORT_VALUE'

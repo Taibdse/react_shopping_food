@@ -5,6 +5,7 @@ import { Table, Button } from 'react-bootstrap';
 import { deleteFood, editFood, toggleForm } from '../../redux/actions/foodActions';
 import Pagination from 'react-js-pagination';
 import { filterByRangeNumber, filterBySearchValue } from '../../services/filters';
+import { sortByNumberValue, sortByTextValue } from '../../services/sortation';
 
 class Foods extends React.Component {
     state = {
@@ -13,12 +14,10 @@ class Foods extends React.Component {
     }
 
     componentWillReceiveProps = (nextProps) => {
-        console.log(nextProps);
     }
 
     componentDidMount = () => {
-        console.log('123');
-        console.log(this.state.activePage);
+       
     }
 
     handlePageChange = (pageNumber) => {
@@ -34,7 +33,6 @@ class Foods extends React.Component {
     };
 
     edit = food => {
-        console.log(food);
         this.props.editFood(food);
         this.props.toggleForm(true);
         document.querySelector('html').scrollTop = 0;
@@ -47,6 +45,16 @@ class Foods extends React.Component {
         return filterBySearchValue(arr2, 'name', name);
     }
 
+    sortFoods = (foods) => {
+        let { name, quantity, price, discount } = this.props.sortBy;
+        console.log(name, quantity, price, discount);
+        let arr1 = sortByTextValue(foods, 'name', name);
+        let arr2 = sortByNumberValue(arr1, 'price', price);
+        let arr3 = sortByNumberValue(arr2, 'quantity', quantity);
+        let arr4 = sortByNumberValue(arr3, 'discount', discount);
+        return arr4;
+    }
+
     paginateFoods = (foods) => {
         let { activePage, itemsCountPerPage } = this.state;
         let startIndex = itemsCountPerPage * (activePage - 1);
@@ -54,9 +62,9 @@ class Foods extends React.Component {
     }
 
     render() {
-
         let filteredFoods = this.filterFoods(this.props.foods);
-        let foods = this.paginateFoods(filteredFoods);
+        let sortedFoods = this.sortFoods(filteredFoods);
+        let foods = this.paginateFoods(sortedFoods);
         let { itemsCountPerPage, activePage } = this.state;
 
         return (
@@ -102,13 +110,16 @@ class Foods extends React.Component {
 
 Foods.propTypes = {
     foods: PropTypes.array.isRequired,
+    sortBy: PropTypes.object.isRequired,
+    filteredObj: PropTypes.object.isRequired,
     editFood: PropTypes.func.isRequired,
-    deleteFood: PropTypes.func.isRequired
+    deleteFood: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     foods: state.food.foods,
-    filteredObj: state.food.filteredObj
+    filteredObj: state.food.filteredObj,
+    sortBy: state.sort.sortBy
 })
 
 // const mapDispatchToProps = function(dispatch){

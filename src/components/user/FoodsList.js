@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
 import { addFoodToCart } from '../../redux/actions/cartActions';
 import { updateFood } from '../../redux/actions/foodActions';
+import { getUnitPrice, getTotalPaymentCart  } from '../../services/payment';
 
 class FoodsList extends React.Component {
     // constructor(props) {
@@ -18,8 +19,6 @@ class FoodsList extends React.Component {
         this.props.updateFood(food)
         this.props.addFoodToCart(food);
     }
-
-    calDiscountedPrice = (price, discount) => Math.round(price * (100 - discount) / 100);
 
     render() {
         return (
@@ -38,7 +37,7 @@ class FoodsList extends React.Component {
                                     { food.description }
                                 </Card.Text>
                                 <div className="price">
-                                    <span className="new-price">${ this.calDiscountedPrice(food.price, food.discount) }</span>
+                                    <span className="new-price">${ getUnitPrice(food.price, food.discount) }</span>
                                     <span className="old-price">${ food.price }</span>
                                 </div>
                                 <Button variant="info" onClick={() => { this.addToCart(food) }}>Buy Now</Button>

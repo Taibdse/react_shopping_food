@@ -15,12 +15,14 @@ import Login from './components/admin/Login';
 import OrdersPage from './components/user/OrdersPage';
 import OrderDetails from './components/user/OrderDetails';
 import UserAccount from './components/user/UserAccount';
+import EditUserAccount from './components/user/EditUserAccount';
+
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
         <Router>
-          <div>
+          <React.Fragment>
             <AppNavbar/>
             <Switch>
               <Route exact path="/" component={UserPage}/>
@@ -30,10 +32,11 @@ class App extends Component {
               <UserPrivateRoute exact path="/user_orders" component={OrdersPage} />
               <UserPrivateRoute exact path="/user_orders/:id" component={OrderDetails}/>
               <UserPrivateRoute exact path="/user/account" component={UserAccount}/>
+              <UserPrivateRoute exact path="/user/edit_account" component={EditUserAccount}/>
               <Route exact path="/notfound" component={NotFound} />
               <Route component={NotFound} />
             </Switch>
-          </div>
+          </React.Fragment>
         </Router>
       </Provider>
     );

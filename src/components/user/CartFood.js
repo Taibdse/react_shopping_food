@@ -6,7 +6,7 @@ import { addFoodToCart, minusQuanity, removeCartItem } from '../../redux/actions
 import { updateFood } from '../../redux/actions/foodActions';
 import { setOrder } from '../../redux/actions/orderActions';
 import { removeCart } from '../../redux/actions/cartActions';
-import { toggleFormLoginUser } from '../../redux/actions/userActions';
+import { toggleFormLoginUser } from '../../redux/actions/userAccountActions';
 import { getTotalPaymentCart, getUnitPrice } from '../../services/payment';
 import classnames from 'classnames';
 
@@ -129,7 +129,7 @@ CartFood.propTypes = {
 
 const mapStateToProps = state => ({
     cart: state.cart.cart,
-    isAuthenticatedUser: state.user.isAuthenticated
+    isAuthenticatedUser: state.userAccount.isAuthenticated
 })
 
 export default connect(mapStateToProps, { addFoodToCart, minusQuanity, removeCartItem, updateFood, setOrder, removeCart, toggleFormLoginUser })(CartFood);

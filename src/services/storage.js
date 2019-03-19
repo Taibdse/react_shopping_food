@@ -1,6 +1,7 @@
 import uuid from 'uuid';
 import { isUser } from '../auth/isUser';
 import { isAdmin } from '../auth/isAdmin';
+import { isNotEmpty } from '../validations/isNotEmpty';
 
 export const foods = [{
         id: uuid.v4(),
@@ -206,11 +207,35 @@ export const foods = [{
     },
 ]
 
+const userAccounts = [
+    { 
+        id: uuid.v4(), 
+        username: 'john doe', 
+        password: '123456', 
+        fullname: 'john doe',
+        email: 'john@gmail.com', 
+        address: 'America', 
+        phone: '12345678',
+        birthdate: '1998/23/02'
+    },
+    { 
+        id: uuid.v4(), 
+        username: 'peter', 
+        password: '123456', 
+        fullname: 'peter pan',
+        email: 'peter@gmail.com', 
+        address: 'Cananda', 
+        phone: '12345678',
+        birthdate: '1998/23/02'
+    }
+]
+
 export const FOOD_LIST_STORAGE_KEY = 'FOOD_LIST_STORAGE_KEY';
 export const CART_STORAGE_KEY = 'CART_STORAGE_KEY';
 export const ORDERED_ITEMS_STORAGE_KEY = 'ORDERED_ITEMS_STORAGE_KEY';
 export const USER_STORAGE_KEY = 'USER_STORAGE_KEY';
 export const ADMIN_STORAGE_KEY = 'ADMIN_STORAGE_KEY';
+export const USER_ACCOUNTS_STORAGE_KEY = 'USER_ACCOUNTS_STORAGE_KEY';
 
 export function getInitialFoodsList(){
     let json = localStorage.getItem(FOOD_LIST_STORAGE_KEY);
@@ -259,12 +284,13 @@ export function saveDataToSessionStorage(data, key){
     sessionStorage.setItem(key, JSON.stringify(data));
 }
 
-export function getInitialUser(){
+export function getInitialCurUserAccount(){
     let json = localStorage.getItem(USER_STORAGE_KEY);
     if(!json) return {};
     try {
         let user = JSON.parse(json);
-        if(isUser(user.username, user.password)) return user;
+        let account = isUser(user.username, user.password);
+        if(isNotEmpty(account)) return user;
         return {};
     } catch (error) {
         console.log('Invalid json format');
@@ -282,5 +308,20 @@ export function getInitialAdmin(){
     } catch (error) {
         console.log('Invalid json format');
         return {};
+    }
+}
+
+export function getInitialUserAccounts(){
+    let json = localStorage.getItem(USER_ACCOUNTS_STORAGE_KEY);
+    if(!json) {
+        saveDataToLocalStorage(userAccounts, USER_ACCOUNTS_STORAGE_KEY);
+        return userAccounts;
+    }
+    try {
+        let accounts = JSON.parse(json);
+        return accounts
+    } catch (error) {
+        console.log('Invalid json format');
+        return [];
     }
 }

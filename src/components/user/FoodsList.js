@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
 import { addFoodToCart } from '../../redux/actions/cartActions';
 import { updateFood } from '../../redux/actions/foodActions';
-import { getUnitPrice, getTotalPaymentCart  } from '../../services/payment';
+import { getUnitPrice } from '../../services/payment';
 
 class FoodsList extends React.Component {
     // constructor(props) {

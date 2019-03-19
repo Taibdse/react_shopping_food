@@ -6,18 +6,12 @@ import { deleteFood, editFood, toggleForm } from '../../redux/actions/foodAction
 import Pagination from 'react-js-pagination';
 import { filterByRangeNumber, filterBySearchValue } from '../../services/filters';
 import { sortByNumberValue, sortByTextValue } from '../../services/sortation';
+import { isNotEmpty } from '../../validations/isNotEmpty';
 
 class Foods extends React.Component {
     state = {
         activePage: 1,
         itemsCountPerPage: 10
-    }
-
-    componentWillReceiveProps = (nextProps) => {
-    }
-
-    componentDidMount = () => {
-       
     }
 
     handlePageChange = (pageNumber) => {
@@ -47,15 +41,17 @@ class Foods extends React.Component {
 
     sortFoods = (foods) => {
         let { name, quantity, price, discount } = this.props.sortBy;
-        console.log(name, quantity, price, discount);
-        let arr1 = sortByTextValue(foods, 'name', name);
-        let arr2 = sortByNumberValue(arr1, 'price', price);
-        let arr3 = sortByNumberValue(arr2, 'quantity', quantity);
-        let arr4 = sortByNumberValue(arr3, 'discount', discount);
-        return arr4;
+        let arr = [];
+        if(name !== 'none') arr = sortByTextValue(foods, 'name', name);
+        else if(price !== 'none') arr = sortByNumberValue(foods, 'price', price);
+        else if(quantity !== 'none') arr = sortByNumberValue(foods, 'quantity', quantity);
+        else if(discount !== 'none') arr = sortByNumberValue(foods, 'discount', discount);
+        else arr = foods.slice();
+        return arr;
     }
 
     paginateFoods = (foods) => {
+        if(!isNotEmpty(foods)) return [];
         let { activePage, itemsCountPerPage } = this.state;
         let startIndex = itemsCountPerPage * (activePage - 1);
         return foods.filter((food, index) => (index >= startIndex && index < startIndex + itemsCountPerPage))

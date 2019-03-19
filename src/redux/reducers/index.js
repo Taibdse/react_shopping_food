@@ -3,7 +3,7 @@ import foodReducer from './foodReducer';
 import cartReducer from './cartReducer';
 import adminReducer from './adminReducer';
 import orderReducer from './orderReducer';
-import userReducer from './userReducer';
+import userAccountReducer from './userAccountReducer';
 import filterReducer from './filterReducer';
 import sortReducer from './sortReducer';
 
@@ -12,7 +12,7 @@ export default combineReducers({
     cart: cartReducer,
     admin: adminReducer,
     order: orderReducer,
-    user: userReducer,
+    userAccount: userAccountReducer,
     filter: filterReducer,
     sort: sortReducer
 })

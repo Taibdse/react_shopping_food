@@ -1,22 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 class UserAccount extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            account: { 
-                username: 'reactjs', 
-                fullname: 'Reactjs Awesome', 
-                phone: '0984738725', 
-                email: 'reactjs@gmail.com', 
-                address: '12 district, Ho Chi Minh city, VN',
-            }
+            account: {}
         };
     }
 
     render() {
-        let { account } = this.state;
+        let { curAccount } = this.props;
+
         return (
             <React.Fragment>
                 <h4 className="text-center font-italic mt-5">Your Account</h4>
@@ -24,23 +21,24 @@ class UserAccount extends React.Component {
                     <div className="col-12">
                         <div className="card">
                             <div className="card-header">
-                                <h4>{ account.username }</h4>
+                                <h4>{ curAccount.username }</h4>
                             </div>
                             <div className="card-body">
                                 <ul className="list-group">
                                     <li className="list-group-item">
-                                        <strong>Fullname: </strong> { account.fullname }
+                                        <strong>Fullname: </strong> { curAccount.fullname }
                                     </li>
                                     <li className="list-group-item">
-                                        <strong>Phone: </strong> { account.phone }
+                                        <strong>Phone: </strong> { curAccount.phone }
                                     </li>
                                     <li className="list-group-item">
-                                        <strong>Email: </strong> { account.email }
+                                        <strong>Email: </strong> { curAccount.email }
                                     </li>
                                     <li className="list-group-item">
-                                        <strong>Address: </strong> { account.address }
+                                        <strong>Address: </strong> { curAccount.address }
                                     </li>
                                 </ul>
+                                <Link to="/user/edit_account" className="btn btn-outline-info float-right mt-3">Edit Info</Link>
                             </div>
                         </div>
                     </div>
@@ -50,6 +48,12 @@ class UserAccount extends React.Component {
     }
 }
 
-UserAccount.propTypes = {};
+UserAccount.propTypes = {
+    curAccount: PropTypes.object.isRequired
+};
 
-export default UserAccount;
+const mapStateToProps = state => ({
+    curAccount: state.userAccount.curAccount
+})
+
+export default connect(mapStateToProps, null)(UserAccount);

@@ -1,14 +1,14 @@
-import {  } from '../actions/Types';
-import { isNotEmpty } from '../../validations/isNotEmpty';
+// import {  } from '../actions/Types';
+// import { isNotEmpty } from '../../validations/isNotEmpty';
 
-const initialState = {
-    filterObj: {},
-};
+// const initialState = {
+//     filterObj: {},
+// };
 
-export default function (state = initialState, action) {
-    switch (action.type) {
+// export default function (state = initialState, action) {
+//     switch (action.type) {
                     
-        default:
-            return state;
-    }
-}
+//         default:
+//             return state;
+//     }
+// }

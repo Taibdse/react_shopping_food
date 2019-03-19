@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'react-bootstrap';
 import Foods from './Foods';
 import FoodForm from './FoodForm';
@@ -39,6 +38,5 @@ class AdminPage extends React.Component {
     }
 }
 
-AdminPage.propTypes = {};
 
 export default AdminPage;

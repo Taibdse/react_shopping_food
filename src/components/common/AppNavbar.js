@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter }  from 'react-router-dom';
 import { Navbar, Nav, Form, Button } from 'react-bootstrap';
 import { setAdmin } from '../../redux/actions/adminActions';
-import { setUser, toggleFormLoginUser } from '../../redux/actions/userActions';
+import { setUser, toggleFormLoginUser } from '../../redux/actions/userAccountActions';
 import classnames from 'classnames';
 
 class AppNavbar extends React.Component {
@@ -71,7 +71,7 @@ class AppNavbar extends React.Component {
                         { this.shouldRenderLogOutBtn() && <Button variant="outline-info" onClick={this.logout}>Logout</Button> }
                         { user.isAuthenticated && !isAdminPage && (
                             <span>
-                                <Link className="font-italic mr-3" to="/user/account">{ user.user.username }</Link>
+                                <Link className="font-italic mr-3" to="/user/account">{ user.curAccount.username }</Link>
                                 <Button variant="outline-danger mr-3" onClick={this.logoutUser}>Logout</Button>
                                 <Link className="btn btn-outline-info" to="/user_orders">
                                     <i className="fas fa-shopping-cart mr-2"></i> Your orders
@@ -98,7 +98,7 @@ AppNavbar.propTypes = {
 
 const mapStateToProps = state => ({
     auth: state.admin,
-    user: state.user
+    user: state.userAccount
 })
 
 export default connect(mapStateToProps, { setAdmin, setUser, toggleFormLoginUser })( withRouter(AppNavbar) );

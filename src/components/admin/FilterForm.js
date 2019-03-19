@@ -8,7 +8,8 @@ class FilterForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            filteredObj: {}
+            filteredObj: {},
+            shouldShowFilter: true
         };
     }
 
@@ -29,14 +30,19 @@ class FilterForm extends React.Component {
         });
     }
 
+    toggleFilter = (val) => this.setState({ shouldShowFilter: val });
+
     render() {
-        let { filteredObj } = this.state;
-        return (
+        let { filteredObj, shouldShowFilter } = this.state;
+        let ele;
+        if(shouldShowFilter){
+            ele = (
             <div className="card">
                 <div className="card-header">
                     <h5>
                         <i className="fa fa-filter mr-2"></i>
-                        Search Foods
+                        Search Foods 
+                        <button className="btn btn-info btn-sm float-right" onClick={() => this.toggleFilter(false) }>Hide</button>
                     </h5>
                 </div>
                 <div className="card-body">
@@ -71,6 +77,20 @@ class FilterForm extends React.Component {
                     </div>
                 </div>
             </div>
+            )
+        } else {
+            ele = ( 
+                <div className="row">
+                    <div className="col-sm-6 mx-auto">
+                        <button className="btn btn-primary btn-block" onClick={() => this.toggleFilter(true)}>Show Filter</button>
+                    </div>
+                </div>
+            );
+        }
+        return (
+            <React.Fragment>
+                { ele }
+            </React.Fragment>
         );
     }
 }

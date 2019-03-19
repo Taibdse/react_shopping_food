@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { isUser } from '../../auth/isUser';
-import { setUser, toggleFormLoginUser } from '../../redux/actions/userActions';
+import { setUser, toggleFormLoginUser } from '../../redux/actions/userAccountActions';
+import { isNotEmpty } from '../../validations/isNotEmpty';
 
 class LoginUser extends React.Component {
     constructor(props) {
@@ -19,9 +20,10 @@ class LoginUser extends React.Component {
     login = (e) => {
         e.preventDefault();
         let { username, password } = this.state.user;
-        if(isUser(username, password)){
-          this.props.setUser(this.state.user);
-          this.handleClose();
+        let account = isUser(username, password)
+        if(isNotEmpty(account)){
+            this.props.setUser(Object.assign({}, account));
+            this.handleClose();
         } else {
             this.props.setUser({});
             alert('Username and password do not match!');
@@ -73,7 +75,7 @@ LoginUser.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    showFormUserLogin: state.user.showFormUserLogin,
+    showFormUserLogin: state.userAccount.showFormUserLogin,
 })
 
 export default connect(mapStateToProps, { toggleFormLoginUser, setUser, toggleFormLoginUser })(LoginUser);

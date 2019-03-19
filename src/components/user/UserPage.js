@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import FoodsList from './FoodsList';
 import { Container } from 'react-bootstrap';
 import CartFood from './CartFood';
@@ -24,7 +23,5 @@ class UserPage extends React.Component {
         );
     }
 }
-
-UserPage.propTypes = {};
 
 export default UserPage;

@@ -1,6 +1,6 @@
-import store from '../redux/store';
+import { getInitialUserAccounts } from '../services/storage';
 
 export const isUser = (username, password) => {
-    let { accounts } = store.getState().userAccount;
-    return accounts.find(acc => acc.username === username && acc.password === password);
+    const userAccounts = getInitialUserAccounts();
+    return userAccounts.find(acc => acc.username === username && acc.password === password);
 }

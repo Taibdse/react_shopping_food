@@ -18,7 +18,11 @@ class OrderDetails extends React.Component {
 
     getTime = (timestamp) => new Date(timestamp).toLocaleTimeString() + ' ' + new Date(timestamp).toLocaleDateString();
 
-    getTotalPayment = (cart) => cart.reduce((sum, cartItem) => sum += cartItem.quantity * cartItem.food.price, 0);
+    getTotalPayment = (cart) => cart.data.reduce((sum, cartItem) => sum += cartItem.quantity * cartItem.food.price, 0);
+
+    componentDidMount = () => {
+        console.log(this.props.orders);
+    }
 
     render() {
         let order = this.getOrder();
@@ -31,7 +35,7 @@ class OrderDetails extends React.Component {
                             <div className="card-header">
                                 <h4>Ordered Time: { this.getTime(order.time) }</h4>
                             </div>
-                            <div className="card-body">
+                            <div className="card-body table-responsive">
                                 <table className="table table-hover table-striped text-center">
                                     <thead>
                                         <tr>
@@ -44,14 +48,14 @@ class OrderDetails extends React.Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        { order.cart.map((cartItem, index) => {
+                                        { order.cart.data.map((cartItem, index) => {
                                             let { food } = cartItem;
                                             let unitPrice = getUnitPrice(food.price, food.discount);
                                             return (
                                                 <tr key={cartItem.food.id}>
                                                     <td>{ index + 1 }</td>
                                                     <td>
-                                                        <img src={ food.image } style={{ width: '150px' }}/>
+                                                        <img src={ food.image } style={{ width: '150px' }} alt={food.name}/>
                                                     </td>
                                                     <td>{ food.name }</td>
                                                     <td>{ cartItem.quantity }</td>
@@ -62,7 +66,7 @@ class OrderDetails extends React.Component {
                                         }) }
                                         <tr>
                                             <td colSpan={5}>Total Payment</td>
-                                            <td>{ getTotalPaymentCart(order.cart) }$</td>
+                                            <td>{ getTotalPaymentCart(order.cart.data) }$</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -72,6 +76,7 @@ class OrderDetails extends React.Component {
                 </div>
             )
         }
+
         return (
             <React.Fragment>
                 { ele }

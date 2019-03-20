@@ -4,6 +4,7 @@ import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { isUser } from '../../auth/isUser';
 import { setUser, toggleFormLoginUser } from '../../redux/actions/userAccountActions';
+import { setUserForCart } from '../../redux/actions/cartActions';
 import { isNotEmpty } from '../../validations/isNotEmpty';
 
 class LoginUser extends React.Component {
@@ -23,6 +24,7 @@ class LoginUser extends React.Component {
         let account = isUser(username, password)
         if(isNotEmpty(account)){
             this.props.setUser(Object.assign({}, account));
+            this.props.setUserForCart(account.id);
             this.handleClose();
         } else {
             this.props.setUser({});
@@ -50,7 +52,7 @@ class LoginUser extends React.Component {
                     <Modal.Title>User Login Form</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <form onSubmit={this.login}>
+                    <form onSubmit={this.login} autoComplete="off">
                         <div className="form-group">
                             <label>Username</label>
                             <input type="text" className="form-control" name="username" onChange={this.onChange} placeholder="Enter username..." value={this.state.user.username}/>
@@ -72,10 +74,11 @@ LoginUser.propTypes = {
     showFormUserLogin: PropTypes.bool.isRequired,
     setUser: PropTypes.func.isRequired,
     toggleFormLoginUser: PropTypes.func.isRequired,
+    setUserForCart: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     showFormUserLogin: state.userAccount.showFormUserLogin,
 })
 
-export default connect(mapStateToProps, { toggleFormLoginUser, setUser, toggleFormLoginUser })(LoginUser);
+export default connect(mapStateToProps, { toggleFormLoginUser, setUser, setUserForCart })(LoginUser);

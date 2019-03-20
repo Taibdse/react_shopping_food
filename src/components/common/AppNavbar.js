@@ -5,6 +5,7 @@ import { Link, withRouter }  from 'react-router-dom';
 import { Navbar, Nav, Form, Button } from 'react-bootstrap';
 import { setAdmin } from '../../redux/actions/adminActions';
 import { setUser, toggleFormLoginUser } from '../../redux/actions/userAccountActions';
+import { setUserForCart } from '../../redux/actions/cartActions';
 import classnames from 'classnames';
 
 class AppNavbar extends React.Component {
@@ -44,6 +45,7 @@ class AppNavbar extends React.Component {
 
     logoutUser = () => {
         this.props.setUser({});
+        this.props.setUserForCart('');
     }
 
     signInUser = () => {
@@ -94,6 +96,7 @@ AppNavbar.propTypes = {
     setAdmin: PropTypes.func.isRequired,
     setUser: PropTypes.func.isRequired,
     toggleFormLoginUser: PropTypes.func.isRequired,
+    setUserForCart: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -101,4 +104,4 @@ const mapStateToProps = state => ({
     user: state.userAccount
 })
 
-export default connect(mapStateToProps, { setAdmin, setUser, toggleFormLoginUser })( withRouter(AppNavbar) );
+export default connect(mapStateToProps, { setAdmin, setUser, toggleFormLoginUser, setUserForCart })( withRouter(AppNavbar) );

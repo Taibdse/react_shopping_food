@@ -4,6 +4,8 @@ import uuid from 'uuid';
 export function setOrder(cart){
     return function(dispatch){
         let time = new Date().getTime();
-        dispatch({ type: SET_ORDERS, payload: { cart, time, id: uuid.v4() } });
+        let newCart = JSON.parse(JSON.stringify(cart))
+        dispatch({ type: SET_ORDERS, payload: { cart: newCart, time, id: uuid.v4() } });
     }
 }
+

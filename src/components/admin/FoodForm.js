@@ -71,8 +71,6 @@ class FoodForm extends React.Component {
         return this.props.showForm ? 'Hide Form' : this.props.food.id ? 'Update current food now' : 'Add More Foods';
     }
 
-    componentDidMount = () => console.log('componentDidMount');
-
     render() {
         let { error } = this.state;
         return (
@@ -87,7 +85,7 @@ class FoodForm extends React.Component {
 
                 { this.props.showForm && <Card>
                     <Card.Body>
-                        <Form onSubmit={this.onSubmit}>
+                        <Form onSubmit={this.onSubmit} autoComplete="off">
                             <Row>
                                 <Col sm={6}>
                                     <FormGroup>

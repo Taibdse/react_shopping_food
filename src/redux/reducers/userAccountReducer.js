@@ -1,6 +1,6 @@
 import { ADD_USER_ACCOUNT, SET_USER, TOGGLE_FORM_USER_LOGIN, UPDATE_USER_ACCOUNT } from '../actions/Types';
 import { isNotEmpty } from '../../validations/isNotEmpty';
-import { saveDataToLocalStorage, getInitialUserAccounts, USER_ACCOUNTS_STORAGE_KEY, getInitialCurUserAccount, USER_STORAGE_KEY as CURRENT_USER_ACCOUNT_STORAGE_KEY } from '../../services/storage';
+import { saveDataToLocalStorage, getInitialUserAccounts, USER_ACCOUNTS_STORAGE_KEY, getInitialCurUserAccount, CURRENT_USER_ACCOUNT_STORAGE_KEY } from '../../services/storage';
 
 const initialAccounts = getInitialUserAccounts();
 const initialCurAccount = getInitialCurUserAccount();
@@ -33,6 +33,7 @@ export default function (state = initialState, action) {
 
         case SET_USER: 
             saveDataToLocalStorage(action.payload, CURRENT_USER_ACCOUNT_STORAGE_KEY);
+            
             return { ...state, curAccount: action.payload, isAuthenticated: isNotEmpty(action.payload) }
 
         case TOGGLE_FORM_USER_LOGIN: 

@@ -13,12 +13,16 @@ import { getTotalPaymentCart } from '../../services/payment';
 
 class OrdersPage extends React.Component {
 
-    getFoodNames = (cart) => cart.map(item => (<div key={item.food.id} style={{ whiteSpace: 'nowrap' }}>{ item.food.name }</div>))
+    getFoodNames = (cart) => cart.data.map(item => (<div key={item.food.id} style={{ whiteSpace: 'nowrap' }}>{ item.food.name }</div>))
 
     getDateTime = (timestamp) => new Date(timestamp).toLocaleTimeString() + ' ' + new Date().toLocaleDateString();
 
     render() {
+        console.log(this.props.orders);
+        const orders = this.props.orders.filter(order => order.cart.userId === this.props.userAccount.id);
+        console.log(orders);
         return (
+            
             <div>
                 <h3 className="text-center font-italic my-3">Your order here</h3>
                 <div className="container">
@@ -35,11 +39,11 @@ class OrdersPage extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    { this.props.orders.map((order, index) => (
+                                    { orders.map((order, index) => (
                                         <tr key={order.id}>
                                             <td>{ index + 1 }</td>
                                             <td style={{ whiteSpace: 'nowrap' }}>{ this.getFoodNames(order.cart) }</td>
-                                            <td>{ getTotalPaymentCart(order.cart) }$</td>
+                                            <td>{ getTotalPaymentCart(order.cart.data) }$</td>
                                             <td style={{ whiteSpace: 'nowrap' }}>{ this.getDateTime(order.time) }</td>
                                             <td>
                                                 <Link className="btn btn-primary btn-sm" to={`/user_orders/${order.id}`}>Detail</Link>
@@ -57,11 +61,14 @@ class OrdersPage extends React.Component {
 }
 
 OrdersPage.propTypes = {
-    orders: PropTypes.array.isRequired
+    orders: PropTypes.array.isRequired,
+    userAccount: PropTypes.object.isRequired,
+    
 };
 
 const mapStateToProps = state => ({
-    orders: state.order.orders
+    orders: state.order.orders,
+    userAccount: state.userAccount.curAccount
 })
 
 export default connect(mapStateToProps, null)(OrdersPage);

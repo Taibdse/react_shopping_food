@@ -19,15 +19,15 @@ class CartFood extends React.Component {
     }
 
     componentWillReceiveProps = (nextProps) => {
-        if(nextProps.cart.length === 0){
+        if(nextProps.cart.data.length === 0){
             this.setState({ isShowCart: false });
-        } else if(nextProps.cart.length === 1) {
+        } else if(nextProps.cart.data.length === 1 && nextProps.cart.data[0].quantity === 1) {
             this.setState({ isShowCart: true });
         }
     }
 
     addQuantity = food => {
-        let cartItem = this.props.cart.find(item => item.food.id === food.id);
+        let cartItem = this.props.cart.data.find(item => item.food.id === food.id);
         if(!cartItem || cartItem.quantity === 0) 
             return alert(`${food.name} in our shop is already out of quantity!, please choose other foods instead`);
         if(cartItem){
@@ -42,14 +42,14 @@ class CartFood extends React.Component {
     }
 
     order = () => {
-        if(this.props.cart.length === 0) return alert('You have not chosen foods!!, please pick your ones');
+        if(this.props.cart.data.length === 0) return alert('You have not chosen foods!!, please pick your ones');
 
         if(this.props.isAuthenticatedUser){
-            this.props.cart.forEach(item => this.props.updateFood(item.food));
+            this.props.cart.data.forEach(item => this.props.updateFood(item.food));
             this.props.setOrder(this.props.cart);
             setTimeout(() => { 
                 this.props.removeCart();
-                alert('Your order was successfully ordered')
+                alert('Your order was successfully ordered');
              }, 500);
         } else {
             this.props.toggleFormLoginUser(true);
@@ -57,7 +57,7 @@ class CartFood extends React.Component {
     }
 
     toggleCart = () => {
-        if(this.props.cart.length !== 0){
+        if(this.props.cart.data.length !== 0){
             this.setState({ isShowCart: !this.state.isShowCart });
         } else {
             alert('You have not chosen any food');
@@ -79,7 +79,7 @@ class CartFood extends React.Component {
                 </div>
                 <div id="cart">
                     <h3 className="text-center my-4">Cart</h3>
-                    { this.props.cart.map(cartItem => (
+                    { this.props.cart.data.map(cartItem => (
                         <div className="card card-body card-cart-item mb-3" key={cartItem.food.id}>
                             <div className="delete-cart-item" onClick={() => this.removeCartItem(cartItem.food)}>
                                 <i className="fas fa-times"></i>
@@ -95,7 +95,7 @@ class CartFood extends React.Component {
                                         <InputGroup.Prepend>
                                             <Button variant="light" onClick={() => this.minusQuantity(cartItem.food)}>-</Button>
                                         </InputGroup.Prepend>
-                                        <FormControl type="number" style={{ width: '10px', textAlign: 'center' }} value={cartItem.quantity}/>
+                                        <FormControl type="text" style={{ width: '10px', textAlign: 'center' }} value={cartItem.quantity}/>
                                         <InputGroup.Append>
                                             <Button variant="light" onClick={() => this.addQuantity(cartItem.food)}>+</Button>
                                         </InputGroup.Append>
@@ -106,7 +106,7 @@ class CartFood extends React.Component {
                         </div>
                     )) }
                     <div>
-                        <h5>Total Payment: <span style={{ color:'yellow' }}>{ getTotalPaymentCart(this.props.cart) }$</span></h5>
+                        <h5>Total Payment: <span style={{ color:'yellow' }}>{ getTotalPaymentCart(this.props.cart.data) }$</span></h5>
                     </div>
                     <Button onClick={this.order} id="btnOrder" block className="mb-5">Order</Button>
                 </div>
@@ -116,7 +116,7 @@ class CartFood extends React.Component {
 }
 
 CartFood.propTypes = {
-    cart: PropTypes.array.isRequired,
+    cart: PropTypes.object.isRequired,
     isAuthenticatedUser: PropTypes.bool.isRequired,
     addFoodToCart: PropTypes.func.isRequired,
     minusQuanity: PropTypes.func.isRequired,

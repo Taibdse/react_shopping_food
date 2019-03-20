@@ -1,4 +1,4 @@
-import { ADD_FOOD_TO_CART, MINUS_FOOD_QUANTITY_ON_CART, REMOVE_FOOD_ON_CART, REMOVE_CART } from './Types';
+import { ADD_FOOD_TO_CART, MINUS_FOOD_QUANTITY_ON_CART, REMOVE_FOOD_ON_CART, REMOVE_CART, SET_USER_FOR_CART } from './Types';
 
 export function addFoodToCart(food){
     return function(dispatch){
@@ -23,3 +23,10 @@ export function removeCart(){
         dispatch({ type: REMOVE_CART });
     }
 }
+
+export function setUserForCart(userId){
+    return function(dispatch){
+        dispatch({ type: SET_USER_FOR_CART, payload: userId });
+    }
+}
+

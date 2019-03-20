@@ -47,7 +47,7 @@ class Login extends React.Component {
                <div className="row">
                     <div className="col-sm-6 mx-auto">
                         <div className="card card-body mt-5">
-                            <form onSubmit={this.login}>
+                            <form onSubmit={this.login} autoComplete="off">
                                 <div className="form-group">
                                     <label>Username</label>
                                     <input type="text" className="form-control" name="username" onChange={this.onChange} placeholder="Enter username..." value={this.state.user.username}/>

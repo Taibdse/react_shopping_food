@@ -3,37 +3,33 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getTotalPaymentCart, getUnitPrice } from '../../services/payment';
+import { getTime } from '../../services/time';
+import { isNotEmpty } from '../../validations/isNotEmpty';
 
 class OrderDetails extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
-        // console.log(this.props.match.params.id)
+        this.state = {
+            order: {}
+        };
     }
-
-    getOrder = () => {
-        let id = this.props.match.params.id;
-        return this.props.orders.find(order => order.id === id);
-    }
-
-    getTime = (timestamp) => new Date(timestamp).toLocaleTimeString() + ' ' + new Date(timestamp).toLocaleDateString();
-
-    getTotalPayment = (cart) => cart.data.reduce((sum, cartItem) => sum += cartItem.quantity * cartItem.food.price, 0);
 
     componentDidMount = () => {
-        console.log(this.props.orders);
+        let orderId = this.props.match.params.orderId;
+        let order = this.props.orders.find(order => order.id === orderId);
+        this.setState({ order });
     }
 
     render() {
-        let order = this.getOrder();
+        let { order } = this.state;
         let ele = ( <h3 className="font-italic text-center" style={{ marginTop: '150px' }}>No order found here</h3> );
-        if(order) {
+        if(isNotEmpty(order)) {
             ele = ( 
                 <div className="container pt-5">
                     <div className="col-12">
                         <div className="card">
                             <div className="card-header">
-                                <h4>Ordered Time: { this.getTime(order.time) }</h4>
+                                <h4>Ordered Time: { getTime(order.time) }</h4>
                             </div>
                             <div className="card-body table-responsive">
                                 <table className="table table-hover table-striped text-center">

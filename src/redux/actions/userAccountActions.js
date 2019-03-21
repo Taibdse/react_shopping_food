@@ -1,4 +1,4 @@
-import { SET_USER, TOGGLE_FORM_USER_LOGIN, ADD_USER_ACCOUNT, UPDATE_USER_ACCOUNT } from './Types';
+import { SET_USER, TOGGLE_FORM_USER_LOGIN, ADD_USER_ACCOUNT, UPDATE_USER_ACCOUNT, REMOVE_USER_ACCOUNT } from './Types';
 
 export function setUser(user){
     return function(dispatch){
@@ -23,4 +23,11 @@ export function updateAccount(account){
         dispatch({ type: UPDATE_USER_ACCOUNT, payload: account })
     }
 }
+
+export function removeUserAccount(id){
+    return function(dispatch){
+        dispatch({ type: REMOVE_USER_ACCOUNT, payload: id })
+    }
+}
+
 

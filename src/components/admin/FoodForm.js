@@ -52,7 +52,6 @@ class FoodForm extends React.Component {
 
     clearForm = (e) => {
         e.preventDefault();
-        // this.setState({ error: {} });
         this.props.clearForm();
     }
 

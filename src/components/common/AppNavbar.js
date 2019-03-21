@@ -16,10 +16,14 @@ class AppNavbar extends React.Component {
             isAboutPage: false,
             isAdminPage: false,
             isUserPage: false,
-            isLoginAdminPage: false
+            isLoginAdminPage: false,
+            isAdminRoute: false
         };
 
-        this.props.history.listen((location) => this.setNavLinkActive(location))
+        this.props.history.listen((location) => {
+            this.setNavLinkActive(location);
+            this.setState({ isAdminRoute: this.isAdminRoute() });
+        })
     }
 
     setNavLinkActive = (location) => {
@@ -32,10 +36,13 @@ class AppNavbar extends React.Component {
         });
     }
 
-    componentDidMount = () => this.setNavLinkActive(this.props.location);
+    componentDidMount = () => {
+        this.setNavLinkActive(this.props.location);
+        this.setState({ isAdminRoute: this.isAdminRoute() });
+    }
 
     shouldRenderLogOutBtn = () => {
-        return this.props.auth.isAuthenticated && this.props.location.pathname === '/admin';
+        return this.props.auth.isAuthenticated && this.state.isAdminRoute;
     }
 
     logout = () => {
@@ -54,24 +61,24 @@ class AppNavbar extends React.Component {
         }
     }
 
+    isAdminRoute = () => this.props.location.pathname.indexOf('/admin') > -1;
+
     render() {
-        let { isAdminPage, isAboutPage, isUserPage, isLoginAdminPage } = this.state;
+        let { isAdminPage, isAboutPage, isUserPage, isLoginAdminPage, isAdminRoute } = this.state;
         let { user } = this.props;
 
-        return (
+        let userNavBar = (
             <Navbar bg="light" expand="lg">
                 <Navbar.Brand href="/">DTFood.vn</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Link className={ classnames('nav-link', { 'active': isUserPage }) } to="/">Home</Link>
-                        <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin">Admin</Link>
                         <Link className={ classnames('nav-link', { 'active': isAboutPage }) } to="/about">About</Link>
                     </Nav>
                    
                     <Form inline>
-                        { this.shouldRenderLogOutBtn() && <Button variant="outline-info" onClick={this.logout}>Logout</Button> }
-                        { user.isAuthenticated && !isAdminPage && (
+                        { user.isAuthenticated && (
                             <span>
                                 <Link className="font-italic mr-3" to="/user/account">{ user.curAccount.username }</Link>
                                 <Button variant="outline-danger mr-3" onClick={this.logoutUser}>Logout</Button>
@@ -80,12 +87,37 @@ class AppNavbar extends React.Component {
                                 </Link>
                             </span>
                         ) } 
-                        {( !user.isAuthenticated && !isAdminPage && !isLoginAdminPage &&
+                        {( !user.isAuthenticated &&
                             <Button variant="outline-warning" onClick={this.signInUser}>Sign In User Account</Button>
                         )}
                     </Form>
                 </Navbar.Collapse>
             </Navbar>
+        )
+
+        let adminNavbar = (
+            <Navbar bg="light" expand="lg">
+                <Navbar.Brand href="/">DTFood.vn</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin">Home</Link>
+                        <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin/users_manage">User Accounts</Link>
+                        <Link className={ classnames('nav-link', { 'active': isAboutPage }) } to="/about">About</Link>
+                    </Nav>
+                   
+                    <Form inline>
+                        { this.shouldRenderLogOutBtn() && <Button variant="outline-info" onClick={this.logout}>Logout</Button> }
+                    </Form>
+                </Navbar.Collapse>
+            </Navbar>
+        )
+            
+
+        return (
+            <React.Fragment>
+                { isAdminRoute ? adminNavbar : userNavBar }
+            </React.Fragment>
         );
     }
 }

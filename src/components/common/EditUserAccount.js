@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { FormGroup, FormLabel } from 'react-bootstrap';
-import InputGroup from '../common/InputGroup';
+import InputGroup from './InputGroup';
 import { isNotEmpty } from '../../validations/isNotEmpty';
 import { isPhone } from '../../validations/isPhone';
 import { isEmail } from '../../validations/isMail';
-import { updateAccount } from '../../redux/actions/userAccountActions';
+import { withRouter } from 'react-router-dom';
 
 class EditUserAccount extends React.Component {
     constructor(props) {
@@ -37,11 +35,10 @@ class EditUserAccount extends React.Component {
 
     updateAccount = e => {
         e.preventDefault();
-        console.log(123);
         let errors = this.checkValid();
         if(!isNotEmpty(errors)){
             this.props.updateAccount(this.state.user);
-            this.props.history.push('/user/account');
+            this.props.history.push(this.props.redirectLocation);
         } else {
             this.setState({ errors });
             alert('Invalid input data!!');
@@ -49,7 +46,6 @@ class EditUserAccount extends React.Component {
     }
 
     componentWillReceiveProps = (nextProps) => {
-        console.log(nextProps);
         this.setState({ user: nextProps.curAccount });
     }
 
@@ -57,7 +53,6 @@ class EditUserAccount extends React.Component {
 
     render() {
         let { errors, user } = this.state;
-        console.log(this.props.curAccount);
 
         return (
             <div className="container">
@@ -131,11 +126,10 @@ class EditUserAccount extends React.Component {
 
 EditUserAccount.propTypes = {
     curAccount: PropTypes.object.isRequired,
-    updateAccount: PropTypes.func.isRequired
+    updateAccount: PropTypes.func.isRequired,
+    redirectLocation: PropTypes.string.isRequired
 };
 
-const mapStateToProps = state => ({
-    curAccount: state.userAccount.curAccount
-})
 
-export default connect(mapStateToProps, { updateAccount })( withRouter(EditUserAccount) );
+
+export default withRouter(EditUserAccount);

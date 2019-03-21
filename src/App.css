@@ -91,3 +91,19 @@
 .card-food-item:hover img{
   transform: scale(1.2);
 }
+
+.card-info-user-admin-page-active{
+  
+}
+
+.header-user-acount-admin-page{
+  transition: all 0.3s;
+}
+
+.header-user-acount-admin-page:hover{
+  background-color: rgba(0,0,0,0.002);
+}
+
+.header-user-acount-admin-page-active{
+  background-color: rgba(0,0,0,0.002);
+}

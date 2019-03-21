@@ -12,10 +12,13 @@ import AppNavbar from './components/common/AppNavbar';
 import PrivateRoute from './components/common/PrivateRoute';
 import UserPrivateRoute from './components/common/UserPrivateRoute';
 import Login from './components/admin/Login';
-import OrdersPage from './components/user/OrdersPage';
-import OrderDetails from './components/user/OrderDetails';
+import UserOrders from './components/user/UserOrders';
+import OrderDetails from './components/common/OrderDetails';
 import UserAccount from './components/user/UserAccount';
-import EditUserAccount from './components/user/EditUserAccount';
+import EditUser from './components/user/EditUser';
+import ManageUsers from './components/admin/ManageUsers';
+import EditUserByAdmin from './components/admin/EditUserByAdmin';
+import ManageUserOrders from './components/admin/ManageUserOrders';
 
 class App extends Component {
   render() {
@@ -26,13 +29,17 @@ class App extends Component {
             <AppNavbar/>
             <Switch>
               <Route exact path="/" component={UserPage}/>
-              <PrivateRoute path="/admin" component={AdminPage} />
+              <PrivateRoute exact path="/admin" component={AdminPage} />
+              <PrivateRoute exact path="/admin/users_manage" component={ManageUsers} />
+              <PrivateRoute exact path="/admin/edit_user_account/:id" component={EditUserByAdmin} />
+              <PrivateRoute exact path="/admin/manage_user_orders/:userId" component={ManageUserOrders} />
+              <PrivateRoute exact path="/admin/manage_user_orders/:userId/:orderId" component={OrderDetails} />
               <Route path="/login" component={Login}/>
               <Route path="/about" component={About}/>
-              <UserPrivateRoute exact path="/user_orders" component={OrdersPage} />
-              <UserPrivateRoute exact path="/user_orders/:id" component={OrderDetails}/>
+              <UserPrivateRoute exact path="/user_orders" component={UserOrders} />
+              <UserPrivateRoute exact path="/user_orders/:orderId" component={OrderDetails} />
               <UserPrivateRoute exact path="/user/account" component={UserAccount}/>
-              <UserPrivateRoute exact path="/user/edit_account" component={EditUserAccount}/>
+              <UserPrivateRoute exact path="/user/edit_account" component={EditUser}/>
               <Route exact path="/notfound" component={NotFound} />
               <Route component={NotFound} />
             </Switch>

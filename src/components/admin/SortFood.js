@@ -84,6 +84,7 @@ class SortFood extends React.Component {
                         </div>
                     </div>
                 </div>
+            
             )
         } else {
             ele = (

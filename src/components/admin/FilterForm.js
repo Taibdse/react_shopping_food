@@ -77,6 +77,7 @@ class FilterForm extends React.Component {
                     </div>
                 </div>
             </div>
+            
             )
         } else {
             ele = ( 

@@ -45,14 +45,20 @@ class AppNavbar extends React.Component {
         return this.props.auth.isAuthenticated && this.state.isAdminRoute;
     }
 
-    logout = () => {
-        this.props.setAdmin({});
-        this.props.history.push('/login');
+    logoutAdmin = () => {
+        let sure = window.confirm('Are you sure to log out this app?');
+        if(sure){
+            this.props.setAdmin({});
+            this.props.history.push('/admin/login');
+        }
     }
 
     logoutUser = () => {
-        this.props.setUser({});
-        this.props.setUserForCart('');
+        let sure = window.confirm('Are you sure to log out this app?');
+        if(sure){
+            this.props.setUser({});
+            this.props.setUserForCart('');
+        }
     }
 
     signInUser = () => {
@@ -65,7 +71,7 @@ class AppNavbar extends React.Component {
 
     render() {
         let { isAdminPage, isAboutPage, isUserPage, isLoginAdminPage, isAdminRoute } = this.state;
-        let { user } = this.props;
+        let { user, auth } = this.props;
 
         let userNavBar = (
             <Navbar bg="light" expand="lg">
@@ -101,13 +107,18 @@ class AppNavbar extends React.Component {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin">Home</Link>
-                        <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin/users_manage">User Accounts</Link>
+                        { auth.isAuthenticated && (
+                            <React.Fragment>
+                                <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin">Home</Link>
+                                <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin/users_manage">User Accounts</Link>
+                            </React.Fragment>
+                        ) }
                         <Link className={ classnames('nav-link', { 'active': isAboutPage }) } to="/about">About</Link>
                     </Nav>
                    
                     <Form inline>
-                        { this.shouldRenderLogOutBtn() && <Button variant="outline-info" onClick={this.logout}>Logout</Button> }
+                        { auth.isAuthenticated && <Button variant="outline-info" onClick={this.logoutAdmin}>Logout</Button> }
+                        { !auth.isAuthenticated && <Button variant="outline-info" onClick={this.logoutAdmin}>Log in</Button> }
                     </Form>
                 </Navbar.Collapse>
             </Navbar>

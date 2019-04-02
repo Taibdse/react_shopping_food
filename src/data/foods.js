@@ -203,3 +203,10 @@ export const foods = [{
         quantity: 220
     },
 ]
+
+// category:''
+// categoryId:''
+// id: 0
+// image: []
+// name:''
+// orderDetails

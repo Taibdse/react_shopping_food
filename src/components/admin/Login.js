@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { isAdmin } from '../../auth/isAdmin';
 import { setAdmin } from '../../redux/actions/adminActions';
 
-class Login extends React.Component {
+class LoginAdmin extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -67,7 +67,7 @@ class Login extends React.Component {
     }
 }
 
-Login.propTypes = {
+LoginAdmin.propTypes = {
     admin: PropTypes.object.isRequired,
     setAdmin: PropTypes.func.isRequired,
 };
@@ -76,4 +76,4 @@ const mapStateToProps = state => ({
     admin: state.admin.admin
 })
 
-export default connect(mapStateToProps, { setAdmin })(withRouter(Login));
+export default connect(mapStateToProps, { setAdmin })(withRouter(LoginAdmin));

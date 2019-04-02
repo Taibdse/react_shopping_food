@@ -5,14 +5,18 @@ import { Collapse } from 'react-bootstrap';
 import classnames from 'classnames';
 import { removeUserAccount } from '../../redux/actions/userAccountActions';
 import { withRouter } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 class ManageUsers extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            users: []
-        };
-    }
+
+    static propTypes = {
+        users: PropTypes.array.isRequired,
+        removeUserAccount: PropTypes.func.isRequired
+    };
+
+    state = {
+        users: []
+    };
 
     componentWillReceiveProps = (nextProps) => {
         this.setState({ users: nextProps.users.map(item => { item.open = false; return item }) });
@@ -29,11 +33,27 @@ class ManageUsers extends React.Component {
         this.setState({ users });
     }
 
-    removeUser = user => {
-        let sure = window.confirm('Are you sure?');
-        if(sure){
+    removeUser = async (user) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        })
+        if(result.value){
             this.props.removeUserAccount(user.id);
-        }   
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'Deleted successfully',
+                    toast: true,
+                    type: 'success',
+                    timer: 4000
+                })
+            }, 500);
+        }
     }
 
     editUser = (user) => {
@@ -50,6 +70,7 @@ class ManageUsers extends React.Component {
 
         return (
            <div className="container">
+                <h2 className="text-center font-italic my-5">User Account Management</h2>
                 {this.state.users.map(user => (
                     <React.Fragment key={user.id}>
                         <div onClick={() => this.toggleUserInfo(user.id)} className={classnames('card card-header mt-2 header-user-acount-admin-page', { 'header-user-acount-admin-page-active': user.open })} style={{ cursor: 'pointer' }}>
@@ -73,7 +94,7 @@ class ManageUsers extends React.Component {
                                 </ul>
                                 <div className="mt-3">
                                     <button className="btn btn-outline-info float-right ml-2" onClick={() => this.editUser(user)}>Edit</button>
-                                    <button className="btn btn-outline-danger float-right" onClick={() => this.removeUser(user)}>Remove</button>
+                                    <button className="btn btn-outline-danger float-right ml-2" onClick={() => this.removeUser(user)}>Remove</button>
                                     <button className="btn btn-outline-primary float-right" onClick={() => this.checkOrderHistory(user)}>See Order</button>
                                 </div>
                             </div>
@@ -84,11 +105,6 @@ class ManageUsers extends React.Component {
         );
     }
 }
-
-ManageUsers.propTypes = {
-    users: PropTypes.array.isRequired,
-    removeUserAccount: PropTypes.func.isRequired
-};
 
 const mapStateToProps = state => ({
     users: state.userAccount.accounts

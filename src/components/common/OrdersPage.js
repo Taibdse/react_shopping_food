@@ -6,6 +6,11 @@ import { getTime } from '../../services/time';
 
 class OrdersPage extends React.Component {
 
+    static propTypes = {
+        orders: PropTypes.array.isRequired,
+        userAccount: PropTypes.object.isRequired,
+    };
+
     getFoodNames = cart => cart.data.map(item => (<div key={item.food.id} style={{ whiteSpace: 'nowrap' }}>{ item.food.name }</div>))
     
     isAdminRoute = () => this.props.location.pathname.indexOf('/admin') > -1;
@@ -56,10 +61,5 @@ class OrdersPage extends React.Component {
         );
     }
 }
-
-OrdersPage.propTypes = {
-    orders: PropTypes.array.isRequired,
-    userAccount: PropTypes.object.isRequired,
-};
 
 export default withRouter(OrdersPage);

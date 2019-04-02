@@ -6,12 +6,15 @@ import { isNotEmpty } from '../../validations/isNotEmpty';
 import { Link } from 'react-router-dom';
 
 class ManageUserOrders extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            userAccount: {}
-        };
-    }
+
+    static propTypes = {
+        orders: PropTypes.array.isRequired,
+        accounts: PropTypes.array.isRequired
+    };
+
+    state = {
+        userAccount: {}
+    };
 
     componentDidMount = () => {
         let id = this.props.match.params.userId;
@@ -44,11 +47,6 @@ class ManageUserOrders extends React.Component {
         );
     }
 }
-
-ManageUserOrders.propTypes = {
-    orders: PropTypes.array.isRequired,
-    accounts: PropTypes.array.isRequired
-};
 
 const mapStateToProps = state => ({
     orders: state.order.orders,

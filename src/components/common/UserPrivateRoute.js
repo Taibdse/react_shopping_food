@@ -10,7 +10,7 @@ const UserPrivateRoute = ({ component: Component, auth, ...rest }) => (
         auth.isAuthenticated === true ? (
         <Component {...props} />
       ) : (
-        <Redirect to="/" />
+        <Redirect to="/user" />
       )
     }
   />

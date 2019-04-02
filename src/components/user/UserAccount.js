@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 class UserAccount extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            account: {}
-        };
-    }
+
+    static propTypes = {
+        curAccount: PropTypes.object.isRequired
+    };
+
+    state = {
+        account: {}
+    };
 
     render() {
         let { curAccount } = this.props;
@@ -47,10 +49,6 @@ class UserAccount extends React.Component {
         );
     }
 }
-
-UserAccount.propTypes = {
-    curAccount: PropTypes.object.isRequired
-};
 
 const mapStateToProps = state => ({
     curAccount: state.userAccount.curAccount

@@ -4,17 +4,21 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isAdmin } from '../../auth/isAdmin';
 import { setAdmin } from '../../redux/actions/adminActions';
+import Swal from 'sweetalert2';
 
 class LoginAdmin extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: {
-                username: '',
-                password: ''
-            }
-        };
-    }
+
+    static propTypes = {
+        admin: PropTypes.object.isRequired,
+        setAdmin: PropTypes.func.isRequired,
+    };
+
+    state = {
+        user: {
+            username: '',
+            password: ''
+        }
+    };
 
     componentWillReceiveProps = nextProps => console.log(nextProps.admin);
 
@@ -26,7 +30,12 @@ class LoginAdmin extends React.Component {
             this.props.setAdmin({ username, password });
             this.props.history.push('/admin');
         }
-        else return alert('Username and password do not match!!');
+        else return Swal.fire({
+            text:'Username and password do not match!!',
+            type: 'error',
+            title: 'Login fail',
+            timer: 5000
+        })
     }
 
     onChange = (e) => {
@@ -66,11 +75,6 @@ class LoginAdmin extends React.Component {
         );
     }
 }
-
-LoginAdmin.propTypes = {
-    admin: PropTypes.object.isRequired,
-    setAdmin: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = state => ({
     admin: state.admin.admin

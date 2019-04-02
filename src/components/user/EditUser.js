@@ -6,11 +6,12 @@ import { updateAccount } from '../../redux/actions/userAccountActions';
 import EditUserAccount from '../common/EditUserAccount';
 
 class EditUser extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
 
+    static propTypes = {
+        curAccount: PropTypes.object.isRequired,
+        updateAccount: PropTypes.func.isRequired
+    };
+    
     render() {
         return (
             <div>
@@ -23,11 +24,6 @@ class EditUser extends React.Component {
         );
     }
 }
-
-EditUser.propTypes = {
-    curAccount: PropTypes.object.isRequired,
-    updateAccount: PropTypes.func.isRequired
-};
 
 const mapStateToProps = state => ({
     curAccount: state.userAccount.curAccount

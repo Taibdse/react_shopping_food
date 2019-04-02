@@ -4,10 +4,11 @@ import OrdersPage from '../common/OrdersPage';
 import { connect } from 'react-redux';
 
 class UserOrders extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+
+    static propTypes = {
+        orders: PropTypes.array.isRequired,
+        userAccount: PropTypes.object.isRequired,
+    };
 
     render() {
         return (
@@ -17,11 +18,6 @@ class UserOrders extends React.Component {
         );
     }
 }
-
-UserOrders.propTypes = {
-    orders: PropTypes.array.isRequired,
-    userAccount: PropTypes.object.isRequired,
-};
 
 const mapStateToProps = state => ({
     orders: state.order.orders,

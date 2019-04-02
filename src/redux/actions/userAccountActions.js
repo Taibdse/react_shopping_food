@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { SET_USER, TOGGLE_FORM_USER_LOGIN, ADD_USER_ACCOUNT, UPDATE_USER_ACCOUNT, REMOVE_USER_ACCOUNT } from './Types';
 
 export function setUser(user){
@@ -14,6 +15,7 @@ export function toggleFormLoginUser(showForm){
 
 export function addAccount(account){
     return function(dispatch){
+        account.id = uuid.v4();
         dispatch({ type: ADD_USER_ACCOUNT, payload: account })
     }
 }

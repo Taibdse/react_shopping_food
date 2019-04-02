@@ -9,14 +9,25 @@ import { removeCart } from '../../redux/actions/cartActions';
 import { toggleFormLoginUser } from '../../redux/actions/userAccountActions';
 import { getTotalPaymentCart, getUnitPrice } from '../../services/payment';
 import classnames from 'classnames';
+import Swal from 'sweetalert2';
 
 class CartFood extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isShowCart: false
-        };
-    }
+
+    static propTypes = {
+        cart: PropTypes.object.isRequired,
+        isAuthenticatedUser: PropTypes.bool.isRequired,
+        addFoodToCart: PropTypes.func.isRequired,
+        minusQuanity: PropTypes.func.isRequired,
+        removeCartItem: PropTypes.func.isRequired,
+        updateFood: PropTypes.func.isRequired,
+        setOrder: PropTypes.func.isRequired,
+        removeCart: PropTypes.func.isRequired,
+        toggleFormLoginUser: PropTypes.func.isRequired,
+    };
+
+    state = {
+        isShowCart: false
+    };
 
     componentWillReceiveProps = (nextProps) => {
         if(nextProps.cart.data.length === 0){
@@ -29,10 +40,18 @@ class CartFood extends React.Component {
     addQuantity = food => {
         let cartItem = this.props.cart.data.find(item => item.food.id === food.id);
         if(!cartItem || cartItem.quantity === 0) 
-            return alert(`${food.name} in our shop is already out of quantity!, please choose other foods instead`);
+            return Swal.fire({
+                type: 'warning',
+                title: `${food.name} in our shop is already out of quantity!, please choose other foods instead`,
+                timer: 4000
+            })
         if(cartItem){
             if(food.quantity === cartItem.quantity) 
-                return alert(`Shop does not have enough ${food.name} quantity for you, sorry for this`);
+                return Swal.fire({
+                    type: 'warning',
+                    title: `Shop does not have enough ${food.name} quantity for you, sorry for this`,
+                    timer: 4000
+                })
             this.props.addFoodToCart(food);
         }
     }
@@ -41,15 +60,33 @@ class CartFood extends React.Component {
         this.props.minusQuanity(food);
     }
 
+    showAlertNotChosenFood = () => Swal.fire({
+        type: 'warning',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        title: `You have not chosen any foods!`,
+        timer: 4000
+    })
+
+    showToastSuccess = () => {
+        Swal.fire({
+            type: 'success',
+            toast: true,
+            title: `Your order was successfully ordered`,
+            timer: 4000
+        })
+    }
+
     order = () => {
-        if(this.props.cart.data.length === 0) return alert('You have not chosen foods!!, please pick your ones');
+        if(this.props.cart.data.length === 0) return this.showAlertNotChosenFood();
 
         if(this.props.isAuthenticatedUser){
             this.props.cart.data.forEach(item => this.props.updateFood(item.food));
             this.props.setOrder(this.props.cart);
             setTimeout(() => { 
                 this.props.removeCart();
-                alert('Your order was successfully ordered');
+                
              }, 500);
         } else {
             this.props.toggleFormLoginUser(true);
@@ -60,7 +97,7 @@ class CartFood extends React.Component {
         if(this.props.cart.data.length !== 0){
             this.setState({ isShowCart: !this.state.isShowCart });
         } else {
-            alert('You have not chosen any food');
+            this.showAlertNotChosenFood();
         }
     }
 
@@ -114,18 +151,6 @@ class CartFood extends React.Component {
         );
     }
 }
-
-CartFood.propTypes = {
-    cart: PropTypes.object.isRequired,
-    isAuthenticatedUser: PropTypes.bool.isRequired,
-    addFoodToCart: PropTypes.func.isRequired,
-    minusQuanity: PropTypes.func.isRequired,
-    removeCartItem: PropTypes.func.isRequired,
-    updateFood: PropTypes.func.isRequired,
-    setOrder: PropTypes.func.isRequired,
-    removeCart: PropTypes.func.isRequired,
-    toggleFormLoginUser: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = state => ({
     cart: state.cart.cart,

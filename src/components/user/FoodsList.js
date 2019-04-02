@@ -5,16 +5,25 @@ import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
 import { addFoodToCart } from '../../redux/actions/cartActions';
 import { updateFood } from '../../redux/actions/foodActions';
 import { getUnitPrice } from '../../services/payment';
+import Swal from 'sweetalert2';
 
 class FoodsList extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {};
-    // }
+   static propTypes = {
+        foodList: PropTypes.array.isRequired,
+        addFoodToCart: PropTypes.func.isRequired,
+        updateFood: PropTypes.func.isRequired
+    };
 
     addToCart = (food) => {
         // alert(`You have just added ${food.name} to cart`);
-        if(food.quantity === 0) return alert('This food is out of quanity');
+        if(food.quantity === 0) return Swal.fire({
+            position: 'top-end',
+            type: 'warning',
+            toast: true,
+            title: 'This food is out of quanity!',
+            showConfirmButton: false,
+            timer: 3000
+        })
         food.quantity--;
         this.props.updateFood(food)
         this.props.addFoodToCart(food);
@@ -49,12 +58,6 @@ class FoodsList extends React.Component {
         );
     }
 }
-
-FoodsList.propTypes = {
-    foodList: PropTypes.array.isRequired,
-    addFoodToCart: PropTypes.func.isRequired,
-    updateFood: PropTypes.func.isRequired
-};
 
 const mapStateToProps = state => ({
     foodList: state.food.foods

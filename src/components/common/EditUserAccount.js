@@ -6,15 +6,20 @@ import { isNotEmpty } from '../../validations/isNotEmpty';
 import { isPhone } from '../../validations/isPhone';
 import { isEmail } from '../../validations/isMail';
 import { withRouter } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 class EditUserAccount extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            errors: {},
-            user: { username: '', email: '', address: '', phone: '', fullname: '' }
-        };
-    }
+
+    static propTypes = {
+        curAccount: PropTypes.object.isRequired,
+        updateAccount: PropTypes.func.isRequired,
+        redirectLocation: PropTypes.string.isRequired
+    };
+
+    state = {
+        errors: {},
+        user: { username: '', email: '', address: '', phone: '', fullname: '' }
+    };
 
     onChange = e => {
         let user = Object.assign({}, this.state.user);
@@ -38,10 +43,25 @@ class EditUserAccount extends React.Component {
         let errors = this.checkValid();
         if(!isNotEmpty(errors)){
             this.props.updateAccount(this.state.user);
-            this.props.history.push(this.props.redirectLocation);
+            Swal.fire({
+                position: 'top-end',
+                type: 'success',
+                toast: true,
+                title: 'Updated successfully!!',
+                showConfirmButton: false,
+                timer: 3000
+            })
+            setTimeout(() => this.props.history.push(this.props.redirectLocation), 3200);
         } else {
             this.setState({ errors });
-            alert('Invalid input data!!');
+            Swal.fire({
+                position: 'top-end',
+                type: 'error',
+                toast: true,
+                title: 'Invalid input data!!',
+                showConfirmButton: false,
+                timer: 3000
+            })
         }
     }
 
@@ -123,13 +143,5 @@ class EditUserAccount extends React.Component {
         );
     }
 }
-
-EditUserAccount.propTypes = {
-    curAccount: PropTypes.object.isRequired,
-    updateAccount: PropTypes.func.isRequired,
-    redirectLocation: PropTypes.string.isRequired
-};
-
-
 
 export default withRouter(EditUserAccount);

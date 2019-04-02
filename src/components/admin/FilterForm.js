@@ -5,13 +5,18 @@ import { filterFoods } from '../../redux/actions/foodActions';
 import { isNotEmpty } from '../../validations/isNotEmpty';
 
 class FilterForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            filteredObj: {},
-            shouldShowFilter: true
-        };
-    }
+
+    static propTypes = {
+        filteredObj: PropTypes.object.isRequired,
+        filterFoods: PropTypes.func.isRequired
+    };
+
+    state = {
+        filteredObj: {
+            name: '', priceFrom: '', priceTo: '', quantityFrom: '', quantityTo: ''
+        },
+        shouldShowFilter: true
+    };
 
     componentWillReceiveProps = (nextProps) => {
         let filteredObj = nextProps.filteredObj;
@@ -95,12 +100,6 @@ class FilterForm extends React.Component {
         );
     }
 }
-
-FilterForm.propTypes = {
-    filteredObj: PropTypes.object.isRequired,
-    filterFoods: PropTypes.func.isRequired
-
-};
 
 const mapStateToProps = state => ({
     filteredObj: state.food.filteredObj

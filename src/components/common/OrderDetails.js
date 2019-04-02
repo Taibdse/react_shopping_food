@@ -7,12 +7,14 @@ import { getTime } from '../../services/time';
 import { isNotEmpty } from '../../validations/isNotEmpty';
 
 class OrderDetails extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            order: {}
-        };
-    }
+
+    static propTypes = {
+        orders: PropTypes.array.isRequired
+    };
+
+    state = {
+        order: {}
+    };
 
     componentDidMount = () => {
         let orderId = this.props.match.params.orderId;
@@ -80,10 +82,6 @@ class OrderDetails extends React.Component {
         );
     }
 }
-
-OrderDetails.propTypes = {
-    orders: PropTypes.array.isRequired
-};
 
 const mapStateToProps = state => ({
     orders: state.order.orders

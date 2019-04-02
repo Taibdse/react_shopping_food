@@ -7,21 +7,48 @@ import Pagination from 'react-js-pagination';
 import { filterByRangeNumber, filterBySearchValue } from '../../services/filters';
 import { sortByNumberValue, sortByTextValue } from '../../services/sortation';
 import { isNotEmpty } from '../../validations/isNotEmpty';
+import Swal from 'sweetalert2';
 
 class Foods extends React.Component {
+    static propTypes = {
+        foods: PropTypes.array.isRequired,
+        sortBy: PropTypes.object.isRequired,
+        filteredObj: PropTypes.object.isRequired,
+        editFood: PropTypes.func.isRequired,
+        deleteFood: PropTypes.func.isRequired,
+    };
+
     state = {
         activePage: 1,
         itemsCountPerPage: 10
-    }
+    };
 
     handlePageChange = (pageNumber) => {
         this.setState({activePage: pageNumber});
       }
 
-    delete = (id) => {
-        let sure = window.confirm('Are you sure?');
-        if(sure){
+    delete = async (id) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            // text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        })
+        if(result.value){
             this.props.deleteFood(id);
+            setTimeout(() => {
+                Swal.fire({
+                    position: 'top-end',
+                    type: 'success',
+                    toast: true,
+                    title: 'Deleted successfully!',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }, 500);
         }
     };
 
@@ -102,14 +129,6 @@ class Foods extends React.Component {
         );
     }
 }
-
-Foods.propTypes = {
-    foods: PropTypes.array.isRequired,
-    sortBy: PropTypes.object.isRequired,
-    filteredObj: PropTypes.object.isRequired,
-    editFood: PropTypes.func.isRequired,
-    deleteFood: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = state => ({
     foods: state.food.foods,

@@ -7,15 +7,23 @@ import { isNotEmpty } from '../../validations/isNotEmpty';
 import { isPositiveInt } from '../../validations/isPositiveInt';
 import InputGroup from '../common/InputGroup';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
+import Swal from 'sweetalert2';
 
 class FoodForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            food: {},
-            error: {},
-        };
-    }
+
+    static propTypes = {
+        food: PropTypes.object.isRequired,
+        showForm: PropTypes.bool.isRequired,
+        toggleForm: PropTypes.func.isRequired,
+        addNewFood: PropTypes.func.isRequired,
+        clearForm: PropTypes.func.isRequired,
+        updateFood: PropTypes.func.isRequired
+    };
+
+    state = {
+        food: {},
+        error: {},
+    };
 
     validateInput = () => {
         let { name, price, quantity, discount, image, description } = this.state.food;
@@ -29,16 +37,39 @@ class FoodForm extends React.Component {
         return error;
     }
 
+    showToastSuccessMsg = (title) =>  Swal.fire({
+        title: title,
+        toast: true,
+        showConfirmButton: false,
+        type: 'success',
+        timer: 4000,
+        position: 'top-end'
+    })
+
+    showErrorToastMsg = (title) => Swal.fire({
+        title: title,
+        toast: true,
+        showConfirmButton: true,
+        type: 'error',
+        timer: 4000,
+    })
+
     onSubmit = (e) => {
         e.preventDefault();
         let { food }  = this.state;
         let error = this.validateInput();
         this.setState({ error });
-        if(isNotEmpty(error)) return alert('Invalid input data!');
+        if(isNotEmpty(error)) return this.showErrorToastMsg('Invalid input data!');
         if(food.id){
             this.props.updateFood(food);
+            setTimeout(() => {
+                this.showToastSuccessMsg('Updated successfully!!');
+            }, 500);
         } else {
             this.props.addNewFood(food);
+            setTimeout(() => {
+                this.showToastSuccessMsg('Added successfully!');
+            }, 500);
         }
     }
 
@@ -190,15 +221,6 @@ class FoodForm extends React.Component {
         );
     }
 }
-
-FoodForm.propTypes = {
-    food: PropTypes.object.isRequired,
-    showForm: PropTypes.bool.isRequired,
-    toggleForm: PropTypes.func.isRequired,
-    addNewFood: PropTypes.func.isRequired,
-    clearForm: PropTypes.func.isRequired,
-    updateFood: PropTypes.func.isRequired
-};
 
 const mapStateToProps = state => ({
     food: state.food.food,

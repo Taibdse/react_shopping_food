@@ -6,15 +6,20 @@ import { isUser } from '../../auth/isUser';
 import { setUser, toggleFormLoginUser } from '../../redux/actions/userAccountActions';
 import { setUserForCart } from '../../redux/actions/cartActions';
 import { isNotEmpty } from '../../validations/isNotEmpty';
+import Swal from 'sweetalert2';
 
 class LoginUser extends React.Component {
+    static propTypes = {
+        showFormUserLogin: PropTypes.bool.isRequired,
+        setUser: PropTypes.func.isRequired,
+        toggleFormLoginUser: PropTypes.func.isRequired,
+        setUserForCart: PropTypes.func.isRequired,
+    };
+
     constructor(props) {
         super(props);
         this.state = {
-            user: {
-                username: '',
-                password: ''
-            }
+            user: { username: '', password: '' }
         };
     }
 
@@ -28,7 +33,11 @@ class LoginUser extends React.Component {
             this.handleClose();
         } else {
             this.props.setUser({});
-            alert('Username and password do not match!');
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Username and password do not match!!',
+            })
         }
     }
 
@@ -69,13 +78,6 @@ class LoginUser extends React.Component {
         );
     }
 }
-
-LoginUser.propTypes = {
-    showFormUserLogin: PropTypes.bool.isRequired,
-    setUser: PropTypes.func.isRequired,
-    toggleFormLoginUser: PropTypes.func.isRequired,
-    setUserForCart: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = state => ({
     showFormUserLogin: state.userAccount.showFormUserLogin,

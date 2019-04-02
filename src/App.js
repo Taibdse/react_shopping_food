@@ -19,6 +19,7 @@ import EditUser from './components/user/EditUser';
 import ManageUsers from './components/admin/ManageUsers';
 import EditUserByAdmin from './components/admin/EditUserByAdmin';
 import ManageUserOrders from './components/admin/ManageUserOrders';
+import RegisterUserAccount from './components/user/RegisterUserAccount';
 
 class App extends Component {
   render() {
@@ -28,21 +29,21 @@ class App extends Component {
           <React.Fragment>
             <AppNavbar/>
             <Switch>
-              
               <PrivateRoute exact path="/admin" component={AdminPage} />
               <PrivateRoute exact path="/admin/users_manage" component={ManageUsers} />
-              <PrivateRoute exact path="/admin/edit_user_account/:id" component={EditUserByAdmin} />
+              <PrivateRoute exact path="/admin/edit_user_account/:userId" component={EditUserByAdmin} />
               <PrivateRoute exact path="/admin/manage_user_orders/:userId" component={ManageUserOrders} />
               <PrivateRoute exact path="/admin/manage_user_orders/:userId/:orderId" component={OrderDetails} />
               <Route path="/admin/login" component={Login}/>
               <Route path="/admin/about" component={About}/>
-              <Route path="/user/about" component={About}/>
 
-              <Route exact path="/" component={UserPage}/>
+              <Route exact path="/user" component={UserPage}/>
+              <Route exact path="/user/register_account" component={RegisterUserAccount}/>
               <UserPrivateRoute exact path="/user/user_orders" component={UserOrders} />
               <UserPrivateRoute exact path="/user/user_orders/:orderId" component={OrderDetails} />
               <UserPrivateRoute exact path="/user/account" component={UserAccount}/>
               <UserPrivateRoute exact path="/user/edit_account" component={EditUser}/>
+
               <Route exact path="/notfound" component={NotFound} />
               <Route component={NotFound} />
             </Switch>

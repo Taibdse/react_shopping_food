@@ -7,55 +7,81 @@ import { setAdmin } from '../../redux/actions/adminActions';
 import { setUser, toggleFormLoginUser } from '../../redux/actions/userAccountActions';
 import { setUserForCart } from '../../redux/actions/cartActions';
 import classnames from 'classnames';
+import Swal from 'sweetalert2';
 
 class AppNavbar extends React.Component {
 
+    static propTypes = {
+        auth: PropTypes.object.isRequired,
+        user: PropTypes.object.isRequired,
+        setAdmin: PropTypes.func.isRequired,
+        setUser: PropTypes.func.isRequired,
+        toggleFormLoginUser: PropTypes.func.isRequired,
+        setUserForCart: PropTypes.func.isRequired,
+    };
+    
     constructor(props) {
         super(props);
         this.state = {
-            isAboutPage: false,
-            isAdminPage: false,
-            isUserPage: false,
-            isLoginAdminPage: false,
-            isAdminRoute: false
+            isAdminRoute: false,
+            isAdminHomePage: false,
+            isAdminAboutPage: false,
+            isAdminUserAccountPage: false,
+            isUserHomePage: true
         };
 
         this.props.history.listen((location) => {
             this.setNavLinkActive(location);
-            this.setState({ isAdminRoute: this.isAdminRoute() });
         })
     }
 
     setNavLinkActive = (location) => {
         let { pathname } = location;
         this.setState({ 
-            isAdminPage: pathname.indexOf('/admin') > -1, 
-            isAboutPage: pathname === '/about', 
-            isUserPage: pathname === '/',
-            isLoginAdminPage: pathname === '/login'
+            isAdminRoute: pathname.indexOf('/admin') > -1,
+            isAdminHomePage: pathname === '/admin',
+            isAdminUserAccountPage: pathname.indexOf('/admin/users_manage') > -1,
+            isAdminAboutPage: pathname.indexOf('/admin/about') > -1, 
+
+            isUserHomePage: pathname === '/user'
         });
     }
 
     componentDidMount = () => {
         this.setNavLinkActive(this.props.location);
-        this.setState({ isAdminRoute: this.isAdminRoute() });
     }
 
     shouldRenderLogOutBtn = () => {
         return this.props.auth.isAuthenticated && this.state.isAdminRoute;
     }
 
-    logoutAdmin = () => {
-        let sure = window.confirm('Are you sure to log out this app?');
-        if(sure){
+    logoutAdmin = async () => {
+        const result = await Swal.fire({
+            title: 'Are you sure to log out this app?',
+            // text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, logout!'
+        })
+        if(result.value){
             this.props.setAdmin({});
             this.props.history.push('/admin/login');
         }
     }
 
-    logoutUser = () => {
-        let sure = window.confirm('Are you sure to log out this app?');
-        if(sure){
+    logoutUser = async () => {
+        const result = await Swal.fire({
+            title: 'Are you sure to log out this app?',
+            // text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, logout!'
+        })
+        if(result.value){
             this.props.setUser({});
             this.props.setUserForCart('');
         }
@@ -67,20 +93,18 @@ class AppNavbar extends React.Component {
         }
     }
 
-    isAdminRoute = () => this.props.location.pathname.indexOf('/admin') > -1;
 
     render() {
-        let { isAdminPage, isAboutPage, isUserPage, isLoginAdminPage, isAdminRoute } = this.state;
+        let { isAdminAboutPage, isAdminHomePage, isAdminUserAccountPage, isAdminRoute, isUserHomePage } = this.state;
         let { user, auth } = this.props;
 
         let userNavBar = (
             <Navbar bg="light" expand="lg">
-                <Navbar.Brand href="/">DTFood.vn</Navbar.Brand>
+                <Navbar.Brand href="/user">DTFood.vn</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Link className={ classnames('nav-link', { 'active': isUserPage }) } to="/">Home</Link>
-                        <Link className={ classnames('nav-link', { 'active': isAboutPage }) } to="/about">About</Link>
+                        <Link className={ classnames('nav-link', { 'active': isUserHomePage }) } to="/user">Home</Link>
                     </Nav>
                    
                     <Form inline>
@@ -88,13 +112,16 @@ class AppNavbar extends React.Component {
                             <span>
                                 <Link className="font-italic mr-3" to="/user/account">{ user.curAccount.username }</Link>
                                 <Button variant="outline-danger mr-3" onClick={this.logoutUser}>Logout</Button>
-                                <Link className="btn btn-outline-info" to="/user_orders">
+                                <Link className="btn btn-outline-info" to="/user/user_orders">
                                     <i className="fas fa-shopping-cart mr-2"></i> Your orders
                                 </Link>
                             </span>
                         ) } 
-                        {( !user.isAuthenticated &&
-                            <Button variant="outline-warning" onClick={this.signInUser}>Sign In User Account</Button>
+                        {!user.isAuthenticated && (
+                            <React.Fragment>
+                                <Button variant="outline-warning" onClick={this.signInUser} className="mr-2">Sign In</Button>
+                                <Link to="/user/register_account" className="btn btn-outline-info" >Register account</Link>
+                            </React.Fragment>
                         )}
                     </Form>
                 </Navbar.Collapse>
@@ -103,27 +130,26 @@ class AppNavbar extends React.Component {
 
         let adminNavbar = (
             <Navbar bg="light" expand="lg">
-                <Navbar.Brand href="/">DTFood.vn</Navbar.Brand>
+                <Navbar.Brand href="/admin">DTFood.vn</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         { auth.isAuthenticated && (
                             <React.Fragment>
-                                <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin">Home</Link>
-                                <Link className={ classnames('nav-link', { 'active': isAdminPage }) } to="/admin/users_manage">User Accounts</Link>
+                                <Link className={ classnames('nav-link', { 'active': isAdminHomePage }) } to="/admin">Foods</Link>
+                                <Link className={ classnames('nav-link', { 'active': isAdminUserAccountPage }) } to="/admin/users_manage">User Accounts</Link>
                             </React.Fragment>
                         ) }
-                        <Link className={ classnames('nav-link', { 'active': isAboutPage }) } to="/about">About</Link>
+                        <Link className={ classnames('nav-link', { 'active': isAdminAboutPage }) } to="/admin/about">About</Link>
                     </Nav>
                    
                     <Form inline>
                         { auth.isAuthenticated && <Button variant="outline-info" onClick={this.logoutAdmin}>Logout</Button> }
-                        { !auth.isAuthenticated && <Button variant="outline-info" onClick={this.logoutAdmin}>Log in</Button> }
+                        { !auth.isAuthenticated && <Link to="/admin/login" className="btn btn-outline-info">Log in</Link> }
                     </Form>
                 </Navbar.Collapse>
             </Navbar>
         )
-            
 
         return (
             <React.Fragment>
@@ -132,15 +158,6 @@ class AppNavbar extends React.Component {
         );
     }
 }
-
-AppNavbar.propTypes = {
-    auth: PropTypes.object.isRequired,
-    user: PropTypes.object.isRequired,
-    setAdmin: PropTypes.func.isRequired,
-    setUser: PropTypes.func.isRequired,
-    toggleFormLoginUser: PropTypes.func.isRequired,
-    setUserForCart: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = state => ({
     auth: state.admin,

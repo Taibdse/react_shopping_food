@@ -7,12 +7,14 @@ import EditUserAccount from '../common/EditUserAccount';
 import { isNotEmpty } from '../../validations/isNotEmpty';
 
 class EditUserByAdmin extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            curAccount: {}
-        };
+    static propTypes = {
+        accounts: PropTypes.array.isRequired,
+        updateAccount: PropTypes.func.isRequired
     }
+
+    state = {
+        curAccount: {}
+    };
 
     componentDidMount = () => {
         let id = this.props.match.params.userId;
@@ -28,7 +30,7 @@ class EditUserByAdmin extends React.Component {
                     <EditUserAccount 
                         curAccount={this.state.curAccount} 
                         updateAccount={this.props.updateAccount} 
-                        redirectLocation={'/admin/user_manage'}
+                        redirectLocation={'/admin/users_manage'}
                     />
             );
         } else {
@@ -46,11 +48,6 @@ class EditUserByAdmin extends React.Component {
         );
     }
 }
-
-EditUserByAdmin.propTypes = {
-    accounts: PropTypes.array.isRequired,
-    updateAccount: PropTypes.func.isRequired
-};
 
 const mapStateToProps = state => ({
     accounts: state.userAccount.accounts

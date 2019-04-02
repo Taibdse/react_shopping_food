@@ -4,24 +4,27 @@ import { connect } from 'react-redux';
 import { setSort } from '../../redux/actions/sortActions';
 
 class SortFood extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            sortTypes: [
-                { value: 'none', text: 'None' },
-                { value: 'asc', text: 'Asc' },
-                { value: 'desc', text: 'Desc' }
-            ],
-            sortBys: [
-                { value: 'name', text: 'Name' },
-                { value: 'quantity', text: 'Quantity' },
-                { value: 'price', text: 'Price' },
-                { value: 'discount', text: 'Discount' },
-            ],
-            curSort: { sortBy: 'name', sortType: 'none' },
-            shouldShowSort: true
-        };
-    }
+
+    static propTypes = {
+        sortBy: PropTypes.object.isRequired,
+        setSort: PropTypes.func.isRequired
+    };
+
+    state = {
+        sortTypes: [
+            { value: 'none', text: 'None' },
+            { value: 'asc', text: 'Asc' },
+            { value: 'desc', text: 'Desc' }
+        ],
+        sortBys: [
+            { value: 'name', text: 'Name' },
+            { value: 'quantity', text: 'Quantity' },
+            { value: 'price', text: 'Price' },
+            { value: 'discount', text: 'Discount' },
+        ],
+        curSort: { sortBy: 'name', sortType: 'none' },
+        shouldShowSort: true
+    };
 
     onChange = (e) => {
         // let sortBy = Object.assign({}, this.state.sortBy);
@@ -105,11 +108,6 @@ class SortFood extends React.Component {
         );
     }
 }
-
-SortFood.propTypes = {
-    sortBy: PropTypes.object.isRequired,
-    setSort: PropTypes.func.isRequired
-};
 
 const mapStateToProps = state => ({
     sortBy: state.sort.sortBy

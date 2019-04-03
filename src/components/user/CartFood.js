@@ -39,15 +39,14 @@ class CartFood extends React.Component {
 
     addQuantity = food => {
         let cartItem = this.props.cart.data.find(item => item.food.id === food.id);
-        if(!cartItem || cartItem.quantity === 0) 
-            return Swal.fire({
-                type: 'warning',
-                title: `${food.name} in our shop is already out of quantity!, please choose other foods instead`,
-                timer: 4000
-            })
+        // if(!cartItem || cartItem.quantity === 0) 
+        //     return Swal.fire({
+        //         type: 'warning',
+        //         title: `${food.name} in our shop is already out of quantity!, please choose other foods instead`,
+        //         timer: 4000
+        //     })
         if(cartItem){
-            if(food.quantity === cartItem.quantity) 
-                return Swal.fire({
+            if(food.quantity === cartItem.quantity) return Swal.fire({
                     type: 'warning',
                     title: `Shop does not have enough ${food.name} quantity for you, sorry for this`,
                     timer: 4000
@@ -82,11 +81,14 @@ class CartFood extends React.Component {
         if(this.props.cart.data.length === 0) return this.showAlertNotChosenFood();
 
         if(this.props.isAuthenticatedUser){
-            this.props.cart.data.forEach(item => this.props.updateFood(item.food));
+            this.props.cart.data.forEach(item => {
+                const newFood = Object.assign({}, item.food);
+                newFood.quantity = newFood.quantity - item.quantity;
+                this.props.updateFood(newFood);
+            });
             this.props.setOrder(this.props.cart);
             setTimeout(() => { 
                 this.props.removeCart();
-                
              }, 500);
         } else {
             this.props.toggleFormLoginUser(true);

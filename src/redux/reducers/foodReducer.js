@@ -46,8 +46,8 @@ export default function (state = initialState, action) {
         case UPDATE_FOOD: 
             foods = state.foods.map(food => {
                 if(food.id === action.payload.id) return action.payload;
-                    return food;
-                })
+                return food;
+            })
             saveDataToLocalStorage(foods, FOOD_LIST_STORAGE_KEY);
             return { ...state, foods: foods.slice(), food: {} }
 

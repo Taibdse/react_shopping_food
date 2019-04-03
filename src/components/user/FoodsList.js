@@ -5,13 +5,17 @@ import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
 import { addFoodToCart } from '../../redux/actions/cartActions';
 import { updateFood } from '../../redux/actions/foodActions';
 import { getUnitPrice } from '../../services/payment';
+import { sortByNumberValue, sortByTextValue, sortByDiscoutedPrice } from '../../services/sortation';
+import { filterBySearchValue, filterByDiscountedPrice } from '../../services/filters';
 import Swal from 'sweetalert2';
 
 class FoodsList extends React.Component {
    static propTypes = {
         foodList: PropTypes.array.isRequired,
         addFoodToCart: PropTypes.func.isRequired,
-        updateFood: PropTypes.func.isRequired
+        updateFood: PropTypes.func.isRequired,
+        sortBy: PropTypes.object.isRequired,
+        filteredObj: PropTypes.object.isRequired,
     };
 
     addToCart = (food) => {
@@ -24,15 +28,32 @@ class FoodsList extends React.Component {
             showConfirmButton: false,
             timer: 3000
         })
-        food.quantity--;
-        this.props.updateFood(food)
         this.props.addFoodToCart(food);
     }
 
+    filterFoods = (foods) => {
+        let { name, priceFrom, priceTo } = this.props.filteredObj;
+        let arr1 = filterByDiscountedPrice(foods, priceFrom, priceTo);
+        return filterBySearchValue(arr1, 'name', name);
+    }
+
+    sortFoods = (foods) => {
+        let { name, price, discount } = this.props.sortBy;
+        let arr = [];
+        if(name !== 'none') arr = sortByTextValue(foods, 'name', name);
+        else if(price !== 'none') arr = sortByDiscoutedPrice(foods, price);
+        else if(discount !== 'none') arr = sortByNumberValue(foods, 'discount', discount);
+        else arr = foods.slice();
+        return arr;
+    }
+
     render() {
+        const foods = this.filterFoods(this.props.foodList);
+        const foodList = this.sortFoods(foods);
+
         return (
             <Row>
-                { this.props.foodList.map(food => (
+                { foodList.map(food => (
                     <Col key={food.id} sm={6} md={4} lg={3} className="mb-5">
                         <Card style={{ margin: 'auto' }} className="card-food-item">
                             <div style={{ maxHeight: '200px', overflow: 'hidden' }}>
@@ -60,7 +81,9 @@ class FoodsList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    foodList: state.food.foods
+    foodList: state.food.foods,
+    filteredObj: state.food.filteredObj,
+    sortBy: state.sort.sortBy
 })
 
 export default connect(mapStateToProps, { addFoodToCart, updateFood })(FoodsList);

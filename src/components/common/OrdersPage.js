@@ -19,9 +19,10 @@ class OrdersPage extends React.Component {
         if(this.isAdminRoute()) return `${this.props.userAccount.username}'s order history`
         return 'Your order here';
     }
+
     render() {
         const orders = this.props.orders.filter(order => order.cart.userId === this.props.userAccount.id);
-        let pathname = this.props.location.pathname;
+        let { pathname } = this.props.location;
         
         return (
             <div>

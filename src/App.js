@@ -20,6 +20,7 @@ import ManageUsers from './components/admin/ManageUsers';
 import EditUserByAdmin from './components/admin/EditUserByAdmin';
 import ManageUserOrders from './components/admin/ManageUserOrders';
 import RegisterUserAccount from './components/user/RegisterUserAccount';
+import LoginUser from './components/user/LoginUser';
 
 class App extends Component {
   render() {
@@ -47,6 +48,7 @@ class App extends Component {
               <Route exact path="/notfound" component={NotFound} />
               <Route component={NotFound} />
             </Switch>
+            <LoginUser/>
           </React.Fragment>
         </Router>
       </Provider>

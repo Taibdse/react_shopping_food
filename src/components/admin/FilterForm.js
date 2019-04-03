@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect }  from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { filterFoods } from '../../redux/actions/foodActions';
 import { isNotEmpty } from '../../validations/isNotEmpty';
 
@@ -34,6 +35,8 @@ class FilterForm extends React.Component {
             this.props.filterFoods(this.state.filteredObj)
         });
     }
+
+    isAdminRoute = () => this.props.location.pathname.indexOf('/admin') > -1;
 
     toggleFilter = (val) => this.setState({ shouldShowFilter: val });
 
@@ -69,16 +72,18 @@ class FilterForm extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6">
-                            <div className="row">
-                                <div className="col-6">
-                                    <input type="number" className="form-control" placeholder="Quantity from..." name="quantityFrom" onChange={this.onChange} value={ filteredObj.quantityFrom }/>
+                       { this.isAdminRoute() &&  (
+                           <div className="col-md-6">
+                                <div className="row">
+                                    <div className="col-6">
+                                        <input type="number" className="form-control" placeholder="Quantity from..." name="quantityFrom" onChange={this.onChange} value={ filteredObj.quantityFrom }/>
+                                    </div>
+                                    <div className="col-6">
+                                        <input type="number" className="form-control" placeholder="Quantity to..." name="quantityTo" onChange={this.onChange} value={ filteredObj.quantityTo }/>
+                                    </div>
                                 </div>
-                                <div className="col-6">
-                                    <input type="number" className="form-control" placeholder="Quantity to..." name="quantityTo" onChange={this.onChange} value={ filteredObj.quantityTo }/>
-                                </div>
-                            </div>
-                        </div>
+                            </div> )
+                       }
                     </div>
                 </div>
             </div>
@@ -105,4 +110,4 @@ const mapStateToProps = state => ({
     filteredObj: state.food.filteredObj
 })
 
-export default connect(mapStateToProps, { filterFoods })(FilterForm);
+export default connect(mapStateToProps, { filterFoods })( withRouter(FilterForm) );

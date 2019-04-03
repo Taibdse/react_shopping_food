@@ -17,52 +17,47 @@ class RegisterUserAccount extends React.Component {
     };
 
     state = {
+        submitted: false,
         errors: {},
         userAccount: { username: '', fullname: '', email: '', address: '', phone: '', password: '', repassword: '' }
     };
 
+    showToastMsg = (title, type, timer) => Swal.fire({
+        position: 'top-end',
+        type, title, timer,
+        toast: true,
+        showConfirmButton: false,
+    })
+
     registerUserAccount = (e) => {
         e.preventDefault();
+
+        this.setState({ submitted: true });
+
         const errors = this.checkValid();
         if(!isNotEmpty(errors)){
             const { userAccount } = this.state;
             const { accounts } = store.getState().userAccount;
             const index = accounts.findIndex(acc => acc.username === userAccount.username);
-            if(index > -1) return Swal.fire({
-                position: 'top-end',
-                type: 'warning',
-                toast: true,
-                title: 'Your username has already existed!!',
-                showConfirmButton: false,
-                timer: 5000
-            })
+            if(index > -1) return this.showToastMsg('Your username has already existed!!', 'warning', 5000);
 
             delete userAccount.repassword;
             this.props.addAccount(userAccount);
-            Swal.fire({
-                type: 'success',
-                title: 'Register successfully!',
-                timer: 3000
-            });
-
+            this.showToastMsg('Registered successfully!', 'success', 3000);
             setTimeout(() => this.props.history.push('/user'), 3200);
         } else {
             this.setState({ errors });
-            Swal.fire({
-                position: 'top-end',
-                type: 'error',
-                toast: true,
-                title: 'Invlid input data!!',
-                showConfirmButton: false,
-                timer: 4000
-            })
+            this.showToastMsg('Invlid input data!!', 'error', 4000);
         }
     }
 
     onChange = e => {
         let userAccount = Object.assign({}, this.state.userAccount);
         userAccount[e.target.name] = e.target.value;
-        this.setState({ userAccount });
+        this.setState({ userAccount }, () => {
+            const errors = this.checkValid();
+            this.setState({ errors });
+        });
     }
 
     checkValid = () => {
@@ -80,11 +75,14 @@ class RegisterUserAccount extends React.Component {
 
     resetForm = () => {
         const userAccount = { username: '', fullname: '', email: '', address: '', phone: '', password: '', repassword: '' }
-        this.setState({ userAccount });
+        this.setState({ userAccount }, () => {
+            const errors = this.checkValid();
+            this.setState({ errors });
+        });
     }
 
     render() {
-        const { errors, userAccount } = this.state;
+        const { errors, userAccount, submitted } = this.state;
         return (
             <div className="container">
                 <h2 className="text-center font-italic mt-3">Register free account here</h2>
@@ -99,8 +97,9 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter username..."
                                     onChange={this.onChange}
                                     value={userAccount.username}
-                                    error={errors.username}
-                                    icon={"fas fa-hamburger"}
+                                    error={submitted && errors.username}
+                                    icon={"fas fa-user"}
+                                    isValid={submitted && !errors.username}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -110,8 +109,9 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter fullname..."
                                     onChange={this.onChange}
                                     value={userAccount.fullname}
-                                    error={errors.fullname}
-                                    icon={"fas fa-hamburger"}
+                                    error={submitted && errors.fullname}
+                                    icon={"fas fa-user-plus"}
+                                    isValid={submitted && !errors.fullname}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -121,8 +121,9 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter email..."
                                     onChange={this.onChange}
                                     value={userAccount.email}
-                                    error={errors.email}
-                                    icon={"fas fa-hamburger"}
+                                    error={submitted && errors.email}
+                                    icon={"fas fa-envelope"}
+                                    isValid={submitted && !errors.email}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -133,8 +134,9 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter phone..."
                                     onChange={this.onChange}
                                     value={userAccount.phone}
-                                    error={errors.phone}
-                                    icon={"fas fa-hamburger"}
+                                    error={submitted && errors.phone}
+                                    icon={"fas fa-phone"}
+                                    isValid={submitted && !errors.phone}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -144,8 +146,9 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter address..."
                                     onChange={this.onChange}
                                     value={userAccount.address}
-                                    error={errors.address}
-                                    icon={"fas fa-hamburger"}
+                                    error={submitted && errors.address}
+                                    icon={"fas fa-map-marker"}
+                                    isValid={submitted && !errors.address}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -156,8 +159,9 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter password..."
                                     onChange={this.onChange}
                                     value={userAccount.password}
-                                    error={errors.password}
-                                    icon={"fas fa-hamburger"}
+                                    error={submitted && errors.password}
+                                    icon={"fas fa-lock"}
+                                    isValid={submitted && !errors.password}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -168,8 +172,9 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter repassword..."
                                     onChange={this.onChange}
                                     value={userAccount.repassword}
-                                    error={errors.repassword}
-                                    icon={"fas fa-hamburger"}
+                                    error={submitted && errors.repassword}
+                                    icon={"fas fa-lock"}
+                                    isValid={submitted && !errors.repassword}
                                 />
                             </FormGroup>
                             <button className="btn btn-outline-success float-right" type="submit">Save</button>

@@ -1,13 +1,27 @@
 import { isNotEmpty } from '../validations/isNotEmpty';
+import { getUnitPrice } from './payment';
+import { isPositiveNum } from '../validations/isPositiveInt';
 
 export const filterByRangeNumber = (array, prop, from, to) => {
     if(!isNotEmpty(array)) return [];
-    if(!isNotEmpty(from) || !isNotEmpty(to) || (from === 0 && to === 0)) return array;
+    if(!isPositiveNum(from) || !isPositiveNum(to)) return array;
     from = Number(from);
     to = Number(to);
     if(from > to) return [];
     return array.filter(item => {
         return item[prop] >= from && item[prop] <= to;
+    })
+}
+
+export const filterByDiscountedPrice = (array, from, to) => {
+    if(!isNotEmpty(array)) return [];
+    if(!isPositiveNum(from) || !isPositiveNum(to)) return array;
+    from = Number(from);
+    to = Number(to);
+    if(from > to) return [];
+    return array.filter(item => {
+        const discountedPrice = getUnitPrice(item.price, item.discount);
+        return discountedPrice >= from && discountedPrice <= to;
     })
 }
 

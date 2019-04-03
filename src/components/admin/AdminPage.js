@@ -16,7 +16,7 @@ const AdminPage = () => (
             </Row>
             <Row className="my-3">
                 <Col sm={12} className="mx-auto">
-                    <FilterForm/>
+                    <FilterForm/><br/>
                     <SortFood/>
                 </Col>
             </Row>

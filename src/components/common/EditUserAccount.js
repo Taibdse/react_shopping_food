@@ -18,6 +18,7 @@ class EditUserAccount extends React.Component {
 
     state = {
         errors: {},
+        submitted: false,
         user: { username: '', email: '', address: '', phone: '', fullname: '' }
     };
 
@@ -38,30 +39,25 @@ class EditUserAccount extends React.Component {
         return errors;
     }
 
+    showToastMsg = (title, type) => Swal.fire({
+        position: 'top-end',
+        type, title,
+        toast: true,
+        showConfirmButton: false,
+        timer: 4000
+    })
+
     updateAccount = e => {
         e.preventDefault();
+        this.setState({ submitted: true });
         let errors = this.checkValid();
         if(!isNotEmpty(errors)){
             this.props.updateAccount(this.state.user);
-            Swal.fire({
-                position: 'top-end',
-                type: 'success',
-                toast: true,
-                title: 'Updated successfully!!',
-                showConfirmButton: false,
-                timer: 3000
-            })
-            setTimeout(() => this.props.history.push(this.props.redirectLocation), 3200);
+            this.showToastMsg('Updated successfully!!', 'success');
+            setTimeout(() => this.props.history.push(this.props.redirectLocation), 4200);
         } else {
             this.setState({ errors });
-            Swal.fire({
-                position: 'top-end',
-                type: 'error',
-                toast: true,
-                title: 'Invalid input data!!',
-                showConfirmButton: false,
-                timer: 3000
-            })
+            this.showToastMsg('Invalid input data!!', 'error');
         }
     }
 
@@ -71,12 +67,20 @@ class EditUserAccount extends React.Component {
 
     componentDidMount = () => this.setState({ user: this.props.curAccount });
 
+    resetForm = () => {
+        const user = { username: '', email: '', address: '', phone: '', fullname: '' }
+        this.setState({ user }, () => {
+            const errors = this.checkValid();
+            this.setState({ errors });
+        })
+    }
+
     render() {
-        let { errors, user } = this.state;
+        let { errors, user, submitted } = this.state;
 
         return (
             <div className="container">
-                <div className="col-sm-8 mx-auto mt-5">
+                <div className="col-sm-8 col-md-6 mx-auto mt-5">
                     <div className="card card-body">
                         <form onSubmit={this.updateAccount}>
                             <FormGroup>
@@ -87,7 +91,8 @@ class EditUserAccount extends React.Component {
                                     onChange={this.onChange}
                                     value={user.username}
                                     error={errors.username}
-                                    icon={"fas fa-hamburger"}
+                                    icon={"fas fa-user"}
+                                    isValid={submitted && !errors.username}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -98,7 +103,8 @@ class EditUserAccount extends React.Component {
                                     onChange={this.onChange}
                                     value={user.fullname}
                                     error={errors.fullname}
-                                    icon={"fas fa-hamburger"}
+                                    icon={"fas fa-user-plus"}
+                                    isValid={submitted && !errors.fullname}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -109,7 +115,8 @@ class EditUserAccount extends React.Component {
                                     onChange={this.onChange}
                                     value={user.email}
                                     error={errors.email}
-                                    icon={"fas fa-hamburger"}
+                                    icon={"fas fa-envelope"}
+                                    isValid={submitted && !errors.email}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -121,7 +128,8 @@ class EditUserAccount extends React.Component {
                                     onChange={this.onChange}
                                     value={user.phone}
                                     error={errors.phone}
-                                    icon={"fas fa-hamburger"}
+                                    icon={"fas fa-phone"}
+                                    isValid={submitted && !errors.phone}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -132,10 +140,12 @@ class EditUserAccount extends React.Component {
                                     onChange={this.onChange}
                                     value={user.address}
                                     error={errors.address}
-                                    icon={"fas fa-hamburger"}
+                                    icon={"fas fa-map-marker"}
+                                    isValid={submitted && !errors.address}
                                 />
                             </FormGroup>
                             <button className="btn btn-outline-success float-right" type="submit">Save</button>
+                            <button className="btn btn-outline-default float-right mr-2" type="button" onClick={this.resetForm}>Reset</button>
                         </form>
                     </div>
                 </div>

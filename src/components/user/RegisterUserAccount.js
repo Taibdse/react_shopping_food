@@ -10,6 +10,7 @@ import { isNotEmpty } from '../../validations/isNotEmpty';
 import { addAccount } from '../../redux/actions/userAccountActions';
 import store from '../../redux/store';
 import Swal from 'sweetalert2';
+import classnames from 'classnames';
 
 class RegisterUserAccount extends React.Component {
     static propTypes = {
@@ -18,9 +19,13 @@ class RegisterUserAccount extends React.Component {
 
     state = {
         submitted: false,
+        inputPasswordType: 'password',
+        inputRePasswordType: 'password',
         errors: {},
         userAccount: { username: '', fullname: '', email: '', address: '', phone: '', password: '', repassword: '' }
     };
+
+    
 
     showToastMsg = (title, type, timer) => Swal.fire({
         position: 'top-end',
@@ -81,8 +86,14 @@ class RegisterUserAccount extends React.Component {
         });
     }
 
+    togglePass = (key) => {
+        let currentType = this.state[key];
+        currentType = currentType === 'password' ? 'text' : 'password';
+        this.setState({ [key]: currentType });
+    }
+
     render() {
-        const { errors, userAccount, submitted } = this.state;
+        const { errors, userAccount, submitted, inputPasswordType, inputRePasswordType } = this.state;
         return (
             <div className="container">
                 <h2 className="text-center font-italic mt-3">Register free account here</h2>
@@ -97,7 +108,7 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter username..."
                                     onChange={this.onChange}
                                     value={userAccount.username}
-                                    error={submitted && errors.username}
+                                    error={submitted && errors.username ? errors.username : ''}
                                     icon={"fas fa-user"}
                                     isValid={submitted && !errors.username}
                                 />
@@ -109,7 +120,7 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter fullname..."
                                     onChange={this.onChange}
                                     value={userAccount.fullname}
-                                    error={submitted && errors.fullname}
+                                    error={submitted && errors.fullname ? errors.fullname : ''}
                                     icon={"fas fa-user-plus"}
                                     isValid={submitted && !errors.fullname}
                                 />
@@ -121,7 +132,7 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter email..."
                                     onChange={this.onChange}
                                     value={userAccount.email}
-                                    error={submitted && errors.email}
+                                    error={submitted && errors.email ? errors.email : ''}
                                     icon={"fas fa-envelope"}
                                     isValid={submitted && !errors.email}
                                 />
@@ -134,7 +145,7 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter phone..."
                                     onChange={this.onChange}
                                     value={userAccount.phone}
-                                    error={submitted && errors.phone}
+                                    error={submitted && errors.phone ? errors.phone : ''}
                                     icon={"fas fa-phone"}
                                     isValid={submitted && !errors.phone}
                                 />
@@ -146,33 +157,46 @@ class RegisterUserAccount extends React.Component {
                                     placeholder="Enter address..."
                                     onChange={this.onChange}
                                     value={userAccount.address}
-                                    error={submitted && errors.address}
+                                    error={submitted && errors.address ? errors.address : ''}
                                     icon={"fas fa-map-marker"}
                                     isValid={submitted && !errors.address}
                                 />
                             </FormGroup>
                             <FormGroup>
                                 <FormLabel>Password</FormLabel>
+                                <button 
+                                    type="button" 
+                                    className={`float-right btn btn-sm btn-toggle-pass ${inputPasswordType === 'password' ? 'btn-success' : 'btn-warning'}`}
+                                    onClick={() => this.togglePass('inputPasswordType')}>
+                                    { inputPasswordType === 'password' ? 'Show Pass' : 'Hide Pass' }
+                                </button>
                                 <InputGroup 
-                                    type="password"
+                                    type={inputPasswordType}
                                     name="password"
                                     placeholder="Enter password..."
                                     onChange={this.onChange}
                                     value={userAccount.password}
-                                    error={submitted && errors.password}
+                                    error={submitted && errors.password ? errors.password: ''}
                                     icon={"fas fa-lock"}
                                     isValid={submitted && !errors.password}
                                 />
                             </FormGroup>
                             <FormGroup>
                                 <FormLabel>Retype password</FormLabel>
+                                <button 
+                                    type="button" 
+                                    // className={classnames('float-right', 'btn', 'btn-sm', 'btn-toggle-pass', { 'btn-success': inputRePasswwordType === 'password', 'btn-danger': inputRePasswwordType === 'text' })} 
+                                    className={`float-right btn btn-sm btn-toggle-pass ${inputRePasswordType === 'password' ? 'btn-success' : 'btn-warning'}`}
+                                    onClick={() => this.togglePass('inputRePasswordType')}>
+                                    { inputRePasswordType === 'password' ? 'Show Pass' : 'Hide Pass' }
+                                </button>
                                 <InputGroup 
-                                    type="password"
+                                    type={inputRePasswordType}
                                     name="repassword"
                                     placeholder="Enter repassword..."
                                     onChange={this.onChange}
                                     value={userAccount.repassword}
-                                    error={submitted && errors.repassword}
+                                    error={submitted && errors.repassword ? errors.repassword: ''}
                                     icon={"fas fa-lock"}
                                     isValid={submitted && !errors.repassword}
                                 />

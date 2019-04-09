@@ -111,3 +111,13 @@ body{
 .header-user-acount-admin-page-active{
   background-color: rgba(0,0,0,0.002);
 }
+
+.toogle-type-password{
+  color: green;
+  cursor: pointer;
+}
+
+.btn-toggle-pass{
+  padding: 5px;
+  font-size: 0.65em;
+}

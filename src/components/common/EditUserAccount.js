@@ -25,7 +25,10 @@ class EditUserAccount extends React.Component {
     onChange = e => {
         let user = Object.assign({}, this.state.user);
         user[e.target.name] = e.target.value;
-        this.setState({ user });
+        this.setState({ user }, () => {
+            const errors = this.checkValid();
+            this.setState({ errors });
+        });
     }
 
     checkValid = () => {
@@ -90,7 +93,7 @@ class EditUserAccount extends React.Component {
                                     placeholder="Enter username..."
                                     onChange={this.onChange}
                                     value={user.username}
-                                    error={errors.username}
+                                    error={submitted && errors.username ? errors.username : ''}
                                     icon={"fas fa-user"}
                                     isValid={submitted && !errors.username}
                                 />
@@ -102,7 +105,7 @@ class EditUserAccount extends React.Component {
                                     placeholder="Enter fullname..."
                                     onChange={this.onChange}
                                     value={user.fullname}
-                                    error={errors.fullname}
+                                    error={submitted && errors.fullname ? errors.fullname : ''}
                                     icon={"fas fa-user-plus"}
                                     isValid={submitted && !errors.fullname}
                                 />
@@ -114,7 +117,7 @@ class EditUserAccount extends React.Component {
                                     placeholder="Enter email..."
                                     onChange={this.onChange}
                                     value={user.email}
-                                    error={errors.email}
+                                    error={submitted && errors.email ? errors.email : ''}
                                     icon={"fas fa-envelope"}
                                     isValid={submitted && !errors.email}
                                 />
@@ -127,7 +130,7 @@ class EditUserAccount extends React.Component {
                                     placeholder="Enter phone..."
                                     onChange={this.onChange}
                                     value={user.phone}
-                                    error={errors.phone}
+                                    error={submitted && errors.phone ? errors.phone : ''}
                                     icon={"fas fa-phone"}
                                     isValid={submitted && !errors.phone}
                                 />
@@ -139,7 +142,7 @@ class EditUserAccount extends React.Component {
                                     placeholder="Enter address..."
                                     onChange={this.onChange}
                                     value={user.address}
-                                    error={errors.address}
+                                    error={submitted && errors.address ? errors.address : ''}
                                     icon={"fas fa-map-marker"}
                                     isValid={submitted && !errors.address}
                                 />

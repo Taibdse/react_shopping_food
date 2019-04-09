@@ -8,6 +8,7 @@ import { setOrder } from '../../redux/actions/orderActions';
 import { removeCart } from '../../redux/actions/cartActions';
 import { toggleFormLoginUser } from '../../redux/actions/userAccountActions';
 import { getTotalPaymentCart, getUnitPrice } from '../../services/payment';
+import { isPositiveInt } from '../../validations/isPositiveInt';
 import classnames from 'classnames';
 import Swal from 'sweetalert2';
 
@@ -26,7 +27,7 @@ class CartFood extends React.Component {
     };
 
     state = {
-        isShowCart: false
+        isShowCart: false,
     };
 
     componentWillReceiveProps = (nextProps) => {
@@ -39,12 +40,6 @@ class CartFood extends React.Component {
 
     addQuantity = food => {
         let cartItem = this.props.cart.data.find(item => item.food.id === food.id);
-        // if(!cartItem || cartItem.quantity === 0) 
-        //     return Swal.fire({
-        //         type: 'warning',
-        //         title: `${food.name} in our shop is already out of quantity!, please choose other foods instead`,
-        //         timer: 4000
-        //     })
         if(cartItem){
             if(food.quantity === cartItem.quantity) return Swal.fire({
                     type: 'warning',
@@ -59,26 +54,18 @@ class CartFood extends React.Component {
         this.props.minusQuanity(food);
     }
 
-    showAlertNotChosenFood = () => Swal.fire({
-        type: 'warning',
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        title: `You have not chosen any foods!`,
-        timer: 4000
-    })
-
-    showToastSuccess = () => {
+    showToastMsg = (type, title) => {
         Swal.fire({
-            type: 'success',
+            type, title,
             toast: true,
-            title: `Your order was successfully ordered`,
-            timer: 4000
+            position: 'top-end',
+            timer: 4000,
+            showConfirmButton: false,
         })
     }
 
     order = () => {
-        if(this.props.cart.data.length === 0) return this.showAlertNotChosenFood();
+        if(this.props.cart.data.length === 0) return this.showToastMsg('warning', 'You have not chosen any foods!');
 
         if(this.props.isAuthenticatedUser){
             this.props.cart.data.forEach(item => {
@@ -89,6 +76,7 @@ class CartFood extends React.Component {
             this.props.setOrder(this.props.cart);
             setTimeout(() => { 
                 this.props.removeCart();
+                this.showToastMsg('success', 'Your order was successfully ordered');
              }, 500);
         } else {
             this.props.toggleFormLoginUser(true);
@@ -99,7 +87,7 @@ class CartFood extends React.Component {
         if(this.props.cart.data.length !== 0){
             this.setState({ isShowCart: !this.state.isShowCart });
         } else {
-            this.showAlertNotChosenFood();
+            this.showToastMsg('warning', 'You have not chosen any foods!');
         }
     }
 
@@ -130,15 +118,19 @@ class CartFood extends React.Component {
                                 <div className="col-8">
                                     <h6>{ cartItem.food.name } <span style={{ color: 'yellow' }}>{ getUnitPrice(cartItem.food.price, cartItem.food.discount) * cartItem.quantity }$</span> </h6>
                                     <p style={{ width: '150px' }}>
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Prepend>
-                                            <Button variant="light" onClick={() => this.minusQuantity(cartItem.food)}>-</Button>
-                                        </InputGroup.Prepend>
-                                        <FormControl type="text" style={{ width: '10px', textAlign: 'center' }} value={cartItem.quantity}/>
-                                        <InputGroup.Append>
-                                            <Button variant="light" onClick={() => this.addQuantity(cartItem.food)}>+</Button>
-                                        </InputGroup.Append>
-                                    </InputGroup>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Prepend>
+                                                <Button variant="light" onClick={() => this.minusQuantity(cartItem.food)}>-</Button>
+                                            </InputGroup.Prepend>
+                                            <FormControl 
+                                                type="text" 
+                                                onChange={(e) => this.onChange(e, cartItem.food)} 
+                                                style={{ width: '10px', textAlign: 'center' }} 
+                                                value={cartItem.quantity}/>
+                                            <InputGroup.Append>
+                                                <Button variant="light" onClick={() => this.addQuantity(cartItem.food)}>+</Button>
+                                            </InputGroup.Append>
+                                        </InputGroup>
                                     </p>
                                 </div>
                             </div>

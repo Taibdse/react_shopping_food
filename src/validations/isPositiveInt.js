@@ -22,6 +22,6 @@ export const isPositiveInt = (n) => {
 }
 
 export const isPositiveNum = val => {
-    if(isNaN()) return false;
+    if(isNaN(val)) return false;
     return Number(val) > 0;
 }

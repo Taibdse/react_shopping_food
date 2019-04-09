@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import './App.css';
@@ -38,6 +38,7 @@ class App extends Component {
               <Route path="/admin/login" component={Login}/>
               <Route path="/admin/about" component={About}/>
 
+              <Route exact path="/" component={() => <Redirect to="/user" />} />
               <Route exact path="/user" component={UserPage}/>
               <Route exact path="/user/register_account" component={RegisterUserAccount}/>
               <UserPrivateRoute exact path="/user/user_orders" component={UserOrders} />
